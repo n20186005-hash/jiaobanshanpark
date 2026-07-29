@@ -1,0 +1,679 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ResponsiveImage from '@/components/ResponsiveImage.astro';
+import Icon from '@/components/Icon.astro';
+import { attractions, routes, faqs, photoCredits } from '@/data/site';
+
+const title = '角板山公園攻略｜行館、梅園、戰備隧道與交通停車';
+const description = '規劃角板山公園半日遊：整理角板山行館、梅園、戰備隧道、思親亭、樟腦收納所、開放資訊、停車交通與三條園區路線。';
+const mapUrl = 'https://www.google.com/maps/dir/?api=1&destination=24.813974%2C121.3506816&destination_place_id=ChIJr2I-r9MWaDQRiHCNvgk5XjM';
+
+const touristSchema = {
+  '@context': 'https://schema.org',
+  '@type': ['TouristAttraction', 'Park'],
+  name: '角板山公園',
+  alternateName: ['角板山行館園區', 'Jiaobanshan Park'],
+  url: 'https://JiaobanshanPark.com/',
+  description,
+  image: [
+    'https://JiaobanshanPark.com/images/og-jiaobanshan.jpg',
+    'https://JiaobanshanPark.com/images/hero-resort.jpg',
+    'https://JiaobanshanPark.com/images/plum-view.jpg',
+  ],
+  isAccessibleForFree: true,
+  telephone: '+886-3-382-1678',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '澤仁里中正路133-1號',
+    addressLocality: '復興區',
+    addressRegion: '桃園市',
+    addressCountry: 'TW',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 24.813974,
+    longitude: 121.3506816,
+  },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+};
+---
+
+<BaseLayout {title} {description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(touristSchema)}></script>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+    <link
+      rel="preload"
+      as="image"
+      href="/images/plum-view-1440.avif"
+      type="image/avif"
+      imagesrcset="/images/plum-view-480.avif 480w, /images/plum-view-768.avif 768w, /images/plum-view-960.avif 960w, /images/plum-view-1440.avif 1440w, /images/plum-view-1920.avif 1920w"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
+  </Fragment>
+
+  <header class="glass-header fixed inset-x-0 top-0 z-50 border-b border-forest-950/8">
+    <div class="container-shell flex h-[var(--header-height)] items-center justify-between gap-5">
+      <a href="#top" class="group flex items-center gap-3" aria-label="角板山公園首頁">
+        <img src="/favicon.svg" alt="" width="40" height="40" class="size-10 rounded-full transition-transform group-hover:-rotate-3" />
+        <span class="leading-tight">
+          <span class="block font-serif text-lg font-bold tracking-tight text-forest-900">角板山公園</span>
+          <span class="block text-[0.6rem] font-bold tracking-[0.22em] text-plum-600">JIAOBANSHAN PARK</span>
+        </span>
+      </a>
+
+      <nav class="hidden items-center gap-7 lg:flex" aria-label="主要導覽">
+        <a class="nav-link" href="#highlights">必看景點</a>
+        <a class="nav-link" href="#routes">遊園路線</a>
+        <a class="nav-link" href="#seasons">四季風景</a>
+        <a class="nav-link" href="#transport">交通停車</a>
+        <a class="nav-link" href="#faq">常見問題</a>
+      </nav>
+
+      <div class="hidden items-center gap-3 md:flex">
+        <a
+          href={mapUrl}
+          target="_blank"
+          rel="nofollow noopener"
+          class="inline-flex h-11 items-center gap-2 rounded-full bg-forest-900 px-5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-forest-800"
+        >
+          <Icon name="map-pin" class="size-4" />
+          開始導航
+        </a>
+      </div>
+
+      <button
+        id="menu-toggle"
+        type="button"
+        class="grid size-11 place-items-center rounded-full border border-forest-900/15 text-forest-900 lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="開啟選單"
+      >
+        <span class="menu-open"><Icon name="menu" class="size-5" /></span>
+        <span class="menu-close hidden"><Icon name="close" class="size-5" /></span>
+      </button>
+    </div>
+
+    <nav id="mobile-menu" class="hidden border-t border-forest-950/8 bg-cream-50 px-4 py-4 lg:hidden" aria-label="行動版導覽">
+      <div class="container-shell grid gap-1">
+        <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#highlights">必看景點</a>
+        <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#routes">遊園路線</a>
+        <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#seasons">四季風景</a>
+        <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#transport">交通停車</a>
+        <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#faq">常見問題</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section id="top" class="hero-noise relative min-h-[43rem] overflow-hidden bg-forest-950 pt-[var(--header-height)] text-white md:min-h-[50rem]">
+      <div class="absolute inset-0 top-[var(--header-height)]">
+        <ResponsiveImage
+          name="plum-view"
+          alt="角板山梅園、大漢溪與山谷風景"
+          width={2400}
+          height={1800}
+          class="h-full w-full object-cover"
+          sizes="100vw"
+          loading="eager"
+          fetchpriority="high"
+          wide={true}
+          position="58% 52%"
+        />
+        <div class="hero-mask absolute inset-0"></div>
+        <div class="hero-contours absolute inset-0" aria-hidden="true"></div>
+      </div>
+
+      <div class="container-shell relative flex min-h-[calc(43rem-var(--header-height))] items-end pb-14 pt-24 md:min-h-[calc(50rem-var(--header-height))] md:pb-20">
+        <div class="max-w-4xl">
+          <p class="mb-7 flex items-center gap-3 text-xs font-bold tracking-[0.24em] text-cream-200/85 md:text-sm">
+            <span class="h-px w-9 bg-plum-300"></span>
+            桃園・復興・北橫山城
+          </p>
+          <h1 class="hero-title max-w-[9ch] text-cream-50">
+            <span class="small">JIAOBANSHAN PARK</span>
+            走進<br />角板山
+          </h1>
+          <p class="mt-8 max-w-2xl text-base leading-8 text-cream-100/90 md:text-xl md:leading-9">
+            在梅香、松林與山谷之間，走過歷史行館、戰備隧道與思親亭。這裡不只是一座公園，而是一段適合慢慢閱讀的北橫旅程。
+          </p>
+          <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+            <a href="#routes" class="primary-btn">
+              選擇遊園路線
+              <Icon name="arrow-right" class="size-4" />
+            </a>
+            <a href="#visit-info" class="secondary-btn">
+              先看行前資訊
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section id="visit-info" class="visit-ribbon relative z-10 border-b border-stonewarm-200 bg-cream-100 pb-7 pt-6 md:pt-9">
+      <div class="visit-card container-shell grid gap-0 sm:grid-cols-2 lg:grid-cols-5">
+        <div class="season-fact visit-fact flex items-center gap-3">
+          <span class="grid size-10 shrink-0 place-items-center rounded-full bg-plum-100 text-plum-600"><Icon name="camera" class="size-5" /></span>
+          <div>
+            <p class="text-[0.66rem] font-bold tracking-[0.16em] text-plum-600">BEST SEASON</p>
+            <p class="mt-1 font-serif text-lg font-bold leading-6 text-forest-900">冬日賞梅</p>
+            <p class="mt-0.5 text-xs text-stonewarm-500">四季皆宜散步</p>
+          </div>
+        </div>
+        <div class="fact-card visit-fact flex items-center gap-3">
+          <Icon name="ticket" class="mt-0.5 size-5 shrink-0 text-plum-600" />
+          <div><p class="text-xs font-bold tracking-[0.12em] text-stonewarm-500">門票</p><p class="mt-1 font-bold text-forest-900">常態免費參觀</p></div>
+        </div>
+        <div class="fact-card visit-fact flex items-center gap-3">
+          <Icon name="clock" class="mt-0.5 size-5 shrink-0 text-plum-600" />
+          <div><p class="text-xs font-bold tracking-[0.12em] text-stonewarm-500">建議停留</p><p class="mt-1 font-bold text-forest-900">完整約 2–3 小時</p></div>
+        </div>
+        <div class="fact-card visit-fact flex items-center gap-3">
+          <Icon name="map-pin" class="mt-0.5 size-5 shrink-0 text-plum-600" />
+          <div><p class="text-xs font-bold tracking-[0.12em] text-stonewarm-500">位置</p><p class="mt-1 font-bold text-forest-900">桃園市復興區</p></div>
+        </div>
+        <div class="fact-card visit-fact flex items-center gap-3">
+          <Icon name="clock" class="mt-0.5 size-5 shrink-0 text-plum-600" />
+          <div><p class="text-xs font-bold tracking-[0.12em] text-stonewarm-500">常態時間</p><p class="mt-1 font-bold text-forest-900">室內 09:00–17:00</p><p class="mt-0.5 text-xs text-stonewarm-500">戶外園區至 20:00</p></div>
+        </div>
+      </div>
+      <div class="container-shell pt-5">
+        <p class="flex items-start gap-2 text-sm leading-6 text-stonewarm-500">
+          <Icon name="info" class="mt-0.5 size-4 shrink-0" />
+          山區可能因颱風、豪雨、施工或活動調整開放，出發前請再確認現場公告。
+        </p>
+      </div>
+    </section>
+
+    <section class="section-pad overflow-hidden bg-cream-50">
+      <div class="container-shell grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+        <div class="reveal">
+          <p class="eyebrow">WHY JIAOBANSHAN</p>
+          <h2 class="section-title">一座公園，讀懂山城的多重風景</h2>
+          <p class="section-lead mt-7">
+            角板山的魅力不只在梅花。行館留下時代記憶，樟腦收納所連結山地產業，戰備隧道藏進林下，思親亭則把視線帶向大漢溪與溪口台地。
+          </p>
+          <p class="section-lead mt-4">
+            即使不是花季，老樹、草地、戶外雕塑與山谷氣候，仍足以構成一趟舒服的半日散步。
+          </p>
+          <div class="mt-8 grid grid-cols-2 gap-5 border-t border-stonewarm-200 pt-7 sm:grid-cols-3">
+            <div><p class="font-serif text-3xl font-bold text-forest-900">6+</p><p class="mt-1 text-sm text-stonewarm-500">主題景點</p></div>
+            <div><p class="font-serif text-3xl font-bold text-forest-900">3</p><p class="mt-1 text-sm text-stonewarm-500">推薦路線</p></div>
+            <div><p class="font-serif text-3xl font-bold text-forest-900">四季</p><p class="mt-1 text-sm text-stonewarm-500">都能散步</p></div>
+          </div>
+        </div>
+
+        <div class="relative reveal">
+          <div class="photo-card aspect-[4/3]">
+            <ResponsiveImage
+              name="hero-resort"
+              alt="樹蔭環繞的角板山行館"
+              width={960}
+              height={640}
+              class="h-full w-full object-cover"
+              position="50% 55%"
+            />
+          </div>
+          <div class="absolute -bottom-6 -left-3 max-w-[14rem] rounded-2xl border border-white/60 bg-white/90 p-4 shadow-xl backdrop-blur md:-left-8 md:p-5">
+            <div class="flex items-center gap-3">
+              <span class="grid size-10 place-items-center rounded-full bg-forest-100 text-forest-700"><Icon name="leaf" class="size-5" /></span>
+              <div><p class="text-xs font-bold tracking-[0.1em] text-plum-600">慢遊提示</p><p class="mt-1 text-sm font-bold leading-5 text-forest-900">不要只拍梅花，留時間看山谷。</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="highlights" class="mountain-section section-pad bg-forest-950 text-white">
+      <div class="container-shell">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+          <div class="reveal">
+            <p class="eyebrow !text-plum-300">PARK HIGHLIGHTS</p>
+            <h2 class="section-title !text-cream-50">六個停留點，拼出完整的角板山</h2>
+          </div>
+          <p class="max-w-2xl text-base leading-8 text-cream-200/75 lg:justify-self-end lg:text-lg">
+            從建築走向山谷、從地面走入隧道。每個景點都不大，但串在一起，才是角板山真正值得停留的原因。
+          </p>
+        </div>
+
+        <div class="mt-14 space-y-12 md:mt-20 md:space-y-20">
+          {attractions.map((item, index) => (
+            <article id={item.id} class={`reveal grid items-center gap-8 lg:grid-cols-2 lg:gap-16 ${index % 2 === 1 ? 'lg:[&>.image-wrap]:order-2' : ''}`}>
+              <div class="image-wrap photo-card aspect-[4/3] bg-forest-900">
+                <ResponsiveImage
+                  name={item.image}
+                  alt={item.alt}
+                  width={item.imageWidth}
+                  height={item.imageHeight}
+                  class="h-full w-full object-cover"
+                  position={item.position}
+                />
+                <span class="absolute left-5 top-5 rounded-full bg-forest-950/72 px-3 py-1.5 text-xs font-bold tracking-[0.12em] text-cream-100 backdrop-blur">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+              </div>
+              <div class={index % 2 === 1 ? 'lg:pr-8' : 'lg:pl-2'}>
+                <p class="text-xs font-bold tracking-[0.18em] text-plum-300">{item.eyebrow}</p>
+                <h3 class="mt-3 font-serif text-3xl font-bold tracking-tight text-cream-50 md:text-5xl">{item.name}</h3>
+                <p class="mt-5 text-base leading-8 text-cream-200/78 md:text-lg">{item.description}</p>
+                <div class="mt-7 flex flex-wrap gap-3">
+                  <span class="inline-flex items-center gap-2 rounded-full border border-cream-100/16 bg-white/5 px-4 py-2 text-sm text-cream-100/80">
+                    <Icon name="clock" class="size-4 text-plum-300" />{item.duration}
+                  </span>
+                  <span class="inline-flex items-center gap-2 rounded-full border border-cream-100/16 bg-white/5 px-4 py-2 text-sm text-cream-100/80">
+                    <Icon name="camera" class="size-4 text-plum-300" />適合慢慢拍
+                  </span>
+                </div>
+                <p class="mt-6 border-l border-plum-400 pl-4 text-sm leading-7 text-cream-200/65">{item.tip}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="routes" class="paper-section section-pad bg-cream-100">
+      <div class="container-shell">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+          <div class="reveal">
+            <p class="eyebrow">ROUTE PLANNER</p>
+            <h2 class="section-title">依照體力與時間，選一條剛好的路</h2>
+          </div>
+          <p class="section-lead lg:justify-self-end">
+            園區不是完全平坦。與其追求「全部走完」，不如先決定停留時間，再把最想看的景點排在前面。
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-7 lg:grid-cols-[0.7fr_1.3fr] lg:gap-12">
+          <div class="reveal">
+            <div class="flex flex-col gap-3" role="tablist" aria-label="遊園路線">
+              {routes.map((route, index) => (
+                <button
+                  type="button"
+                  class="route-tab flex items-center justify-between rounded-2xl px-5 py-4 text-left"
+                  role="tab"
+                  id={`route-tab-${route.id}`}
+                  aria-controls={`route-panel-${route.id}`}
+                  aria-selected={index === 0 ? 'true' : 'false'}
+                  tabindex={index === 0 ? '0' : '-1'}
+                  data-route-tab={route.id}
+                >
+                  <span><span class="block font-bold">{route.title}</span><span class="mt-1 block text-sm opacity-70">{route.audience}</span></span>
+                  <span class="rounded-full border border-current/20 px-3 py-1 text-xs font-bold">{route.duration}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div class="reveal rounded-[2rem] bg-white p-6 shadow-[0_25px_80px_rgba(23,55,45,0.08)] md:p-9">
+            {routes.map((route, index) => (
+              <div
+                id={`route-panel-${route.id}`}
+                role="tabpanel"
+                aria-labelledby={`route-tab-${route.id}`}
+                hidden={index !== 0}
+                data-route-panel={route.id}
+              >
+                <div class="flex flex-col gap-5 border-b border-stonewarm-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <p class="text-xs font-bold tracking-[0.16em] text-plum-600">{route.audience}</p>
+                    <h3 class="mt-2 font-serif text-3xl font-bold text-forest-900 md:text-4xl">{route.title}</h3>
+                  </div>
+                  <span class="inline-flex w-fit items-center gap-2 rounded-full bg-forest-100 px-4 py-2 text-sm font-bold text-forest-800">
+                    <Icon name="clock" class="size-4" />{route.duration}
+                  </span>
+                </div>
+                <p class="mt-6 max-w-2xl text-base leading-8 text-stonewarm-700">{route.summary}</p>
+                <ol class="relative mt-7 space-y-1">
+                  {route.stops.map((stop, stopIndex) => (
+                    <li class="route-stop relative flex gap-4 pb-5 last:pb-0">
+                      <span class="relative z-10 grid size-8 shrink-0 place-items-center rounded-full border border-forest-300 bg-cream-50 text-xs font-bold text-forest-800">{stopIndex + 1}</span>
+                      <span class="route-line" aria-hidden="true"></span>
+                      <span class="pt-1 font-semibold text-forest-900">{stop}</span>
+                    </li>
+                  ))}
+                </ol>
+                <div class="mt-7 flex gap-3 rounded-2xl bg-plum-100/70 p-4 text-sm leading-7 text-stonewarm-700">
+                  <Icon name="info" class="mt-1 size-4 shrink-0 text-plum-600" />
+                  <p>{route.note}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="photo-ribbon overflow-hidden bg-cream-50 py-4 md:py-10">
+      <div class="container-shell grid grid-cols-2 gap-3 md:grid-cols-12 md:gap-4">
+        <figure class="photo-card col-span-2 aspect-[16/10] md:col-span-7 md:row-span-2 md:aspect-auto md:min-h-[34rem]">
+          <ResponsiveImage name="entrance" alt="角板山行館園區入口與林蔭" width={960} height={720} class="h-full w-full object-cover" position="50% 50%" />
+          <figcaption class="absolute bottom-4 left-4 rounded-full bg-forest-950/75 px-4 py-2 text-xs font-bold text-white backdrop-blur">從林蔭入口開始散步</figcaption>
+        </figure>
+        <figure class="photo-card aspect-square md:col-span-5 md:aspect-auto md:min-h-[16.5rem]">
+          <ResponsiveImage name="tunnel" alt="角板山戰備隧道入口" width={960} height={539} class="h-full w-full object-cover" position="50% 50%" />
+          <figcaption class="sr-only">戰備隧道藏在林下山壁之中</figcaption>
+        </figure>
+        <figure class="photo-card aspect-square md:col-span-5 md:aspect-auto md:min-h-[16.5rem]">
+          <ResponsiveImage name="camphor-house" alt="角板山樟腦收納所木造空間" width={960} height={720} class="h-full w-full object-cover" position="50% 52%" />
+          <figcaption class="sr-only">樟腦收納所保存山城產業記憶</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="seasons" class="section-pad bg-cream-50">
+      <div class="container-shell">
+        <div class="mx-auto max-w-3xl text-center reveal">
+          <p class="eyebrow justify-center before:hidden">SEASONS OF THE MOUNTAIN</p>
+          <h2 class="section-title mx-auto max-w-[14ch]">不只梅花季，四季都有自己的步調</h2>
+          <p class="section-lead mx-auto mt-6">山區天候變化快，季節是參考，不是保證。最好的安排，是保留一點彈性給霧、光線與當天的山。</p>
+        </div>
+
+        <div class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <article class="detail-card reveal">
+            <span class="font-serif text-5xl text-plum-300">冬</span>
+            <h3 class="mt-5 text-xl font-bold text-forest-900">梅香與山谷</h3>
+            <p class="mt-3 text-sm leading-7 text-stonewarm-700">冬季是最具代表性的時節。梅花、低溫與溪谷霧氣交織，也是人潮最多的季節。</p>
+            <p class="mt-5 text-xs font-bold tracking-[0.12em] text-plum-600">建議：平日上午</p>
+          </article>
+          <article class="detail-card reveal">
+            <span class="font-serif text-5xl text-forest-300">春</span>
+            <h3 class="mt-5 text-xl font-bold text-forest-900">新綠散步</h3>
+            <p class="mt-3 text-sm leading-7 text-stonewarm-700">花季後人潮稍緩，林木與草地恢復清新綠意，適合把重點放在行館、雕塑與歷史空間。</p>
+            <p class="mt-5 text-xs font-bold tracking-[0.12em] text-plum-600">建議：午後慢走</p>
+          </article>
+          <article class="detail-card reveal">
+            <span class="font-serif text-5xl text-forest-500">夏</span>
+            <h3 class="mt-5 text-xl font-bold text-forest-900">濃蔭與山城</h3>
+            <p class="mt-3 text-sm leading-7 text-stonewarm-700">樹蔭讓散步比市區舒適，但午後雷雨常見。可搭配復興區季節水果與商圈短停。</p>
+            <p class="mt-5 text-xs font-bold tracking-[0.12em] text-plum-600">建議：早出早回</p>
+          </article>
+          <article class="detail-card reveal">
+            <span class="font-serif text-5xl text-[#a78563]">秋</span>
+            <h3 class="mt-5 text-xl font-bold text-forest-900">乾爽林色</h3>
+            <p class="mt-3 text-sm leading-7 text-stonewarm-700">氣溫較舒服，適合走完整路線。沒有花季喧鬧，更能留意園林、老樹與戶外作品。</p>
+            <p class="mt-5 text-xs font-bold tracking-[0.12em] text-plum-600">建議：完整兩小時</p>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="transport" class="section-pad bg-forest-50">
+      <div class="container-shell grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+        <div class="reveal">
+          <p class="eyebrow">GETTING THERE</p>
+          <h2 class="section-title">先把交通安排好，抵達後只管散步</h2>
+          <p class="section-lead mt-6">角板山位在北橫公路沿線。自駕最有彈性，大眾運輸則要先確認去回班次，尤其不要錯過返程末班車。</p>
+          <a href={mapUrl} target="_blank" rel="nofollow noopener" class="mt-8 inline-flex items-center gap-2 font-bold text-forest-800 underline decoration-plum-300 decoration-2 underline-offset-8 hover:text-plum-600">
+            在地圖中開啟導航 <Icon name="external" class="size-4" />
+          </a>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <article class="mountain-card rounded-[1.7rem] bg-white p-6 reveal md:p-7">
+            <span class="grid size-12 place-items-center rounded-full bg-forest-100 text-forest-700"><Icon name="car" class="size-6" /></span>
+            <h3 class="mt-5 text-xl font-bold text-forest-900">自駕與停車</h3>
+            <p class="mt-3 text-sm leading-7 text-stonewarm-700">由大溪方向沿台 7 線進入復興區。園區周邊常用仁愛收費停車場與上台地收費停車場。</p>
+            <ul class="mt-5 space-y-3 text-sm text-stonewarm-700">
+              <li class="flex gap-2"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-plum-400"></span>一般週末建議 10:00 前抵達</li>
+              <li class="flex gap-2"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-plum-400"></span>梅花季最好 09:00 前入場</li>
+              <li class="flex gap-2"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-plum-400"></span>連假可能有臨時疏導與替代停車</li>
+            </ul>
+          </article>
+
+          <article class="mountain-card rounded-[1.7rem] bg-white p-6 reveal md:p-7">
+            <span class="grid size-12 place-items-center rounded-full bg-plum-100 text-plum-600"><Icon name="bus" class="size-6" /></span>
+            <h3 class="mt-5 text-xl font-bold text-forest-900">大眾運輸</h3>
+            <p class="mt-3 text-sm leading-7 text-stonewarm-700">可從桃園、大溪方向轉乘往復興區的客運或觀光路線，在復興站、角板山公園周邊站點下車。</p>
+            <ul class="mt-5 space-y-3 text-sm text-stonewarm-700">
+              <li class="flex gap-2"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-plum-400"></span>先查當日班距與末班車</li>
+              <li class="flex gap-2"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-plum-400"></span>假日車程可能受北橫車流影響</li>
+              <li class="flex gap-2"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-plum-400"></span>預留轉乘與步行時間</li>
+            </ul>
+          </article>
+
+          <article class="mountain-card rounded-[1.7rem] border border-forest-900/10 bg-cream-50 p-6 reveal md:col-span-2 md:p-7">
+            <div class="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-center">
+              <div>
+                <p class="text-xs font-bold tracking-[0.15em] text-plum-600">DESTINATION</p>
+                <h3 class="mt-2 font-serif text-2xl font-bold text-forest-900">角板山行館園區</h3>
+                <p class="mt-2 text-sm leading-7 text-stonewarm-700">桃園市復興區澤仁里中正路 133-1 號</p>
+                <p class="mt-1 text-sm text-stonewarm-500">座標：24.813974, 121.3506816</p>
+              </div>
+              <a href={mapUrl} target="_blank" rel="nofollow noopener" class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-forest-900 px-6 text-sm font-bold text-white hover:bg-forest-800">
+                <Icon name="map-pin" class="size-4" />導航前往
+              </a>
+            </div>
+          </article>
+        </div>
+
+        <figure class="reveal overflow-hidden rounded-[2rem] border border-forest-900/10 bg-white shadow-[0_25px_80px_rgba(23,55,45,0.08)] lg:col-span-2">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3621.4589439776278!2d121.35068159999999!3d24.813973999999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346816d3af3e62af%3A0x335e093bbe8d7088!2z6KeS5p2_5bGx5YWs5Zut!5e0!3m2!1szh-CN!2stw!4v1785324111448!5m2!1szh-CN!2stw"
+            title="角板山公園 Google 地圖"
+            width="600"
+            height="450"
+            class="block aspect-[4/3] h-auto w-full border-0 sm:aspect-[16/9]"
+            style="border:0;"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+          <figcaption class="flex flex-wrap items-center justify-between gap-2 border-t border-forest-900/10 px-5 py-4 text-sm text-stonewarm-500 sm:px-6">
+            <span>角板山公園位置與周邊道路</span>
+            <a href={mapUrl} target="_blank" rel="nofollow noopener" class="font-bold text-forest-800 underline decoration-plum-300 decoration-2 underline-offset-4 hover:text-plum-600">
+              在 Google 地圖中開啟
+            </a>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section-pad bg-cream-50">
+      <div class="container-shell">
+        <div class="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
+          <div class="reveal">
+            <p class="eyebrow">TRAVEL WITH EASE</p>
+            <h2 class="section-title">帶長輩、孩子或雨具，這些先知道</h2>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <article class="detail-card reveal">
+              <Icon name="accessibility" class="size-7 text-plum-600" />
+              <h3 class="mt-5 text-lg font-bold text-forest-900">無障礙與長輩</h3>
+              <p class="mt-3 text-sm leading-7 text-stonewarm-700">旅遊資訊站可詢問輪椅借用，並設有無障礙廁所；但觀景段、隧道與台地之間仍有坡度。</p>
+            </article>
+            <article class="detail-card reveal">
+              <Icon name="child" class="size-7 text-plum-600" />
+              <h3 class="mt-5 text-lg font-bold text-forest-900">親子同行</h3>
+              <p class="mt-3 text-sm leading-7 text-stonewarm-700">孩子通常最喜歡隧道與草地。推車以主步道為主，遇階梯可改走輕鬆路線，不必硬走完整圈。</p>
+            </article>
+            <article class="detail-card reveal">
+              <Icon name="umbrella" class="size-7 text-plum-600" />
+              <h3 class="mt-5 text-lg font-bold text-forest-900">山區天氣</h3>
+              <p class="mt-3 text-sm leading-7 text-stonewarm-700">比市區多帶一件薄外套與輕便雨具。雨後石階、木棧道與隧道入口可能濕滑。</p>
+            </article>
+            <article class="detail-card reveal">
+              <Icon name="phone" class="size-7 text-plum-600" />
+              <h3 class="mt-5 text-lg font-bold text-forest-900">現場詢問</h3>
+              <p class="mt-3 text-sm leading-7 text-stonewarm-700">園區聯絡電話：03-382-1678。臨時休園、室內開放或導覽安排，以當日現場資訊為準。</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section-pad bg-cream-100">
+      <div class="container-shell grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+        <div class="reveal lg:sticky lg:top-28 lg:self-start">
+          <p class="eyebrow">BEFORE YOU GO</p>
+          <h2 class="section-title">出發前，最常被問的八件事</h2>
+          <p class="section-lead mt-6">把門票、花期、路線與天候先釐清，現場就不必一直查手機。</p>
+        </div>
+        <div class="reveal">
+          {faqs.map((faq, index) => (
+            <details class="faq-item group py-5" open={index === 0}>
+              <summary class="flex items-center justify-between gap-5 py-2 text-left">
+                <h3 class="text-base font-bold leading-7 text-forest-900 md:text-lg">{faq.question}</h3>
+                <span class="faq-icon grid size-8 shrink-0 place-items-center rounded-full border border-forest-900/15 text-forest-800"><Icon name="chevron-down" class="size-4" /></span>
+              </summary>
+              <p class="max-w-2xl pb-2 pr-10 pt-3 text-sm leading-7 text-stonewarm-700 md:text-base md:leading-8">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="mountain-section relative overflow-hidden bg-forest-950 py-20 text-white md:py-28">
+      <div class="absolute inset-0 opacity-25">
+        <ResponsiveImage name="park-grounds" alt="" width={960} height={720} class="h-full w-full object-cover" sizes="100vw" position="50% 45%" />
+      </div>
+      <div class="absolute inset-0 bg-forest-950/78"></div>
+      <div class="container-shell relative text-center reveal">
+        <p class="text-xs font-bold tracking-[0.22em] text-plum-300">READY FOR THE MOUNTAIN</p>
+        <h2 class="mx-auto mt-5 max-w-[13ch] font-serif text-4xl font-bold leading-tight tracking-tight text-cream-50 md:text-6xl">把半天留給角板山，慢慢走就很好</h2>
+        <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-cream-200/78 md:text-lg">選好路線、提早出發，剩下的交給山林、光線與當天遇見的風景。</p>
+        <a href={mapUrl} target="_blank" rel="nofollow noopener" class="primary-btn mt-9">
+          開啟導航
+          <Icon name="map-pin" class="size-4" />
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-[#10271f] pb-24 pt-14 text-cream-100 md:pb-14">
+    <div class="container-shell">
+      <div class="grid gap-10 border-b border-white/10 pb-10 md:grid-cols-[1fr_auto] md:items-end">
+        <div>
+          <div class="flex items-center gap-3">
+            <img src="/favicon.svg" alt="" width="44" height="44" class="size-11 rounded-full" />
+            <div><p class="font-serif text-xl font-bold">角板山公園</p><p class="mt-1 text-[0.62rem] font-bold tracking-[0.2em] text-plum-300">JIAOBANSHAN PARK</p></div>
+          </div>
+          <p class="mt-5 max-w-lg text-sm leading-7 text-cream-200/65">一份專注於角板山行館園區的繁體中文旅遊指南，協助旅人快速規劃路線、交通與停留時間。</p>
+        </div>
+        <div class="flex flex-wrap gap-x-6 gap-y-3 text-sm text-cream-200/70">
+          <a href="#highlights" class="hover:text-white">必看景點</a>
+          <a href="#routes" class="hover:text-white">遊園路線</a>
+          <a href="#transport" class="hover:text-white">交通停車</a>
+          <a href="#faq" class="hover:text-white">常見問題</a>
+        </div>
+      </div>
+
+      <div class="grid gap-6 py-8 text-xs leading-6 text-cream-200/55 md:grid-cols-[1fr_auto] md:items-start">
+        <div>
+          <p>本網站為非官方旅遊資訊網站。</p>
+          <details class="mt-4 max-w-2xl">
+            <summary class="cursor-pointer font-bold text-cream-200/75 hover:text-white">實景照片來源與授權</summary>
+            <ul class="mt-3 space-y-2 border-l border-white/10 pl-4">
+              {photoCredits.map((credit) => (
+                <li>
+                  {credit.label}：{credit.author}，{credit.license}。
+                  <a href={credit.source} target="_blank" rel="license noopener" class="underline decoration-white/25 underline-offset-4 hover:text-white">來源</a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </div>
+        <p class="md:text-right">© 2026 JiaobanshanPark.com</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="fixed inset-x-0 bottom-0 z-40 border-t border-forest-950/10 bg-cream-50/95 p-3 backdrop-blur md:hidden">
+    <div class="mx-auto flex max-w-lg gap-2">
+      <a href="#routes" class="flex h-12 flex-1 items-center justify-center gap-2 rounded-full border border-forest-900/15 text-sm font-bold text-forest-900">
+        <Icon name="route" class="size-4" />看路線
+      </a>
+      <a href={mapUrl} target="_blank" rel="nofollow noopener" class="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-forest-900 text-sm font-bold text-white">
+        <Icon name="map-pin" class="size-4" />導航前往
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const menuToggle = document.querySelector<HTMLButtonElement>('#menu-toggle');
+    const mobileMenu = document.querySelector<HTMLElement>('#mobile-menu');
+    const menuOpenIcon = menuToggle?.querySelector<HTMLElement>('.menu-open');
+    const menuCloseIcon = menuToggle?.querySelector<HTMLElement>('.menu-close');
+
+    function closeMenu() {
+      if (!menuToggle || !mobileMenu) return;
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.setAttribute('aria-label', '開啟選單');
+      mobileMenu.classList.add('hidden');
+      menuOpenIcon?.classList.remove('hidden');
+      menuCloseIcon?.classList.add('hidden');
+    }
+
+    menuToggle?.addEventListener('click', () => {
+      if (!mobileMenu) return;
+      const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+      menuToggle.setAttribute('aria-expanded', String(!isOpen));
+      menuToggle.setAttribute('aria-label', isOpen ? '開啟選單' : '關閉選單');
+      mobileMenu.classList.toggle('hidden', isOpen);
+      menuOpenIcon?.classList.toggle('hidden', !isOpen);
+      menuCloseIcon?.classList.toggle('hidden', isOpen);
+    });
+
+    mobileMenu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+
+    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-route-tab]'));
+    const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-route-panel]'));
+
+    function activateRoute(routeId: string, moveFocus = false) {
+      tabs.forEach((tab) => {
+        const active = tab.dataset.routeTab === routeId;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+        if (active && moveFocus) tab.focus();
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.routePanel !== routeId;
+      });
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activateRoute(tab.dataset.routeTab ?? 'easy'));
+      tab.addEventListener('keydown', (event) => {
+        if (!['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let nextIndex = index;
+        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+        if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = tabs.length - 1;
+        activateRoute(tabs[nextIndex]?.dataset.routeTab ?? 'easy', true);
+      });
+    });
+
+    const revealItems = document.querySelectorAll<HTMLElement>('.reveal');
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
+      revealItems.forEach((item) => observer.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add('is-visible'));
+    }
+  </script>
+</BaseLayout>

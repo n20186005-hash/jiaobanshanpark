@@ -1,0 +1,55 @@
+---
+interface Props {
+  name: string;
+  alt: string;
+  width: number;
+  height: number;
+  class?: string;
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  position?: string;
+  wide?: boolean;
+}
+
+const {
+  name,
+  alt,
+  width,
+  height,
+  class: className = '',
+  sizes = '(min-width: 1024px) 50vw, 100vw',
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  position = '50% 50%',
+  wide = false,
+} = Astro.props;
+
+const widths = wide ? [480, 768, 960, 1440, 1920] : [480, 768, 960];
+const avifSrcset = widths.map((width) => `/images/${name}-${width}.avif ${width}w`).join(', ');
+const webpSrcset = widths.map((width) => `/images/${name}-${width}.webp ${width}w`).join(', ');
+---
+
+<picture class="contents">
+  <source
+    type="image/avif"
+    srcset={avifSrcset}
+    {sizes}
+  />
+  <source
+    type="image/webp"
+    srcset={webpSrcset}
+    {sizes}
+  />
+  <img
+    src={`/images/${name}.jpg`}
+    {alt}
+    {width}
+    {height}
+    {loading}
+    decoding="async"
+    {fetchpriority}
+    class={className}
+    style={`object-position:${position}`}
+  />
+</picture>

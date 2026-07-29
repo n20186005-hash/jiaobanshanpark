@@ -1,0 +1,18 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+---
+
+<BaseLayout title="找不到頁面" description="此頁面不存在，返回角板山公園旅遊指南。" canonical="https://JiaobanshanPark.com/404">
+  <main class="grid min-h-screen place-items-center bg-cream-100 px-5 text-center">
+    <div>
+      <span class="mx-auto grid size-16 place-items-center rounded-full bg-forest-900 text-cream-100"><Icon name="mountain" class="size-8" /></span>
+      <p class="mt-8 text-xs font-bold tracking-[0.2em] text-plum-600">404・TRAIL NOT FOUND</p>
+      <h1 class="mt-4 font-serif text-4xl font-bold text-forest-900 md:text-6xl">這條小徑走錯了</h1>
+      <p class="mx-auto mt-5 max-w-md leading-8 text-stonewarm-700">你要找的頁面不存在，回到首頁重新規劃角板山的散步路線。</p>
+      <a href="/" class="mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-forest-900 px-6 font-bold text-white">
+        回到首頁 <Icon name="arrow-right" class="size-4" />
+      </a>
+    </div>
+  </main>
+</BaseLayout>
