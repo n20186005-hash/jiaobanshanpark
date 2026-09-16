@@ -6,16 +6,22 @@ interface Props {
   description: string;
   canonical?: string;
   image?: string;
+  ogTitle?: string;
+  ogDescription?: string;
 }
 
 const {
   title,
   description,
   canonical = 'https://JiaobanshanPark.com/',
-  image = 'https://JiaobanshanPark.com/images/og-jiaobanshan.jpg',
+  image = 'https://JiaobanshanPark.com/images/jiaobanshan-park-og-1.jpg',
+  ogTitle,
+  ogDescription,
 } = Astro.props;
 
 const fullTitle = title.includes('角板山公園') ? title : `${title}｜角板山公園`;
+const socialTitle = ogTitle ?? fullTitle;
+const socialDescription = ogDescription ?? description;
 ---
 
 <!doctype html>
@@ -24,6 +30,12 @@ const fullTitle = title.includes('角板山公園') ? title : `${title}｜角板
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#17372d" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="角板山公園" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
     <meta name="description" content={description} />
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <link rel="canonical" href={canonical} />
@@ -34,8 +46,8 @@ const fullTitle = title.includes('角板山公園') ? title : `${title}｜角板
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_TW" />
     <meta property="og:site_name" content="角板山公園" />
-    <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={socialDescription} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={image} />
     <meta property="og:image:width" content="1200" />
@@ -43,8 +55,8 @@ const fullTitle = title.includes('角板山公園') ? title : `${title}｜角板
     <meta property="og:image:alt" content="角板山梅園與大漢溪山谷風景" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:description" content={socialDescription} />
     <meta name="twitter:image" content={image} />
 
     <slot name="head" />
@@ -55,6 +67,14 @@ const fullTitle = title.includes('角板山公園') ? title : `${title}｜角板
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-HXM22WWPKP', { anonymize_ip: true });
+    </script>
+
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
+        });
+      }
     </script>
   </head>
   <body class="min-h-screen bg-cream-50 text-ink selection:bg-plum-200 selection:text-forest-950">

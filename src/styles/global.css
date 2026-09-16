@@ -401,6 +401,13 @@ img {
   z-index: 1;
 }
 
+.review-panel {
+  border: 1px solid rgba(24, 47, 39, 0.1);
+  border-radius: 1.75rem;
+  background: #fffdf8;
+  box-shadow: 0 24px 64px rgba(13, 33, 27, 0.1);
+}
+
 .faq-item summary:focus-visible {
   outline: 3px solid #d9a4aa;
   outline-offset: 4px;

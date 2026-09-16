@@ -2,38 +2,71 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ResponsiveImage from '@/components/ResponsiveImage.astro';
 import Icon from '@/components/Icon.astro';
-import { attractions, routes, faqs, photoCredits } from '@/data/site';
+import GoogleReviews from '@/components/GoogleReviews.astro';
+import SourcesSection from '@/components/SourcesSection.astro';
+import WeatherWidget from '@/components/WeatherWidget.astro';
+import VisitorServices from '@/components/VisitorServices.astro';
+import SeasonalStrategy from '@/components/SeasonalStrategy.astro';
+import AudienceRoutes from '@/components/AudienceRoutes.astro';
+import VisitorResponsibility from '@/components/VisitorResponsibility.astro';
+import { attractions, routes, faqs, photoCredits, entity, googleReview } from '@/data/site';
 
-const title = '角板山公園攻略｜行館、梅園、戰備隧道與交通停車';
-const description = '規劃角板山公園半日遊：整理角板山行館、梅園、戰備隧道、思親亭、樟腦收納所、開放資訊、停車交通與三條園區路線。';
+const title = '角板山公園攻略｜免費入園・梅花季・戰備隧道・交通門票（桃園市復興區）';
+const description =
+  '桃園復興角板山公園（角板山行館）旅遊指南：常態免費入園，整理冬季梅花季、戰備隧道彩繪展、開放時間、公車交通與周邊停車資訊，並附即時天氣與三條遊園路線。';
+const ogTitle = '角板山公園 Jiaobanshan Park（桃園市復興區）- Travel Guide';
+const ogDescription = 'Official visitor guide to Jiaobanshan Park (角板山公園) in Fuxing District, Taoyuan City, Taiwan：行館、梅園、戰備隧道、思親亭、交通與停車指南。';
 const mapUrl = 'https://www.google.com/maps/dir/?api=1&destination=24.813974%2C121.3506816&destination_place_id=ChIJr2I-r9MWaDQRiHCNvgk5XjM';
 
 const touristSchema = {
   '@context': 'https://schema.org',
   '@type': ['TouristAttraction', 'Park'],
+  '@id': 'https://JiaobanshanPark.com/#attraction',
   name: '角板山公園',
-  alternateName: ['角板山行館園區', 'Jiaobanshan Park'],
-  url: 'https://JiaobanshanPark.com/',
+  alternateName: ['Jiaobanshan Park', '角板山', '復興區 角板山公園', 'Jiaobanshan Park Fuxing'],
   description,
+  url: 'https://JiaobanshanPark.com/',
   image: [
-    'https://JiaobanshanPark.com/images/og-jiaobanshan.jpg',
-    'https://JiaobanshanPark.com/images/hero-resort.jpg',
-    'https://JiaobanshanPark.com/images/plum-view.jpg',
+    'https://JiaobanshanPark.com/images/jiaobanshan-park-og-1.jpg',
+    'https://JiaobanshanPark.com/images/jiaobanshan-park-resort-1.jpg',
+    'https://JiaobanshanPark.com/images/jiaobanshan-park-plum-1.jpg',
   ],
   isAccessibleForFree: true,
-  telephone: '+886-3-382-1678',
+  openingHours: 'Mo-Su 09:00-20:00',
+  telephone: entity.telephone,
   address: {
     '@type': 'PostalAddress',
-    streetAddress: '澤仁里中正路133-1號',
-    addressLocality: '復興區',
-    addressRegion: '桃園市',
-    addressCountry: 'TW',
+    streetAddress: entity.streetAddress,
+    addressLocality: entity.city,
+    addressRegion: entity.stateProvince,
+    postalCode: entity.postalCode,
+    addressCountry: entity.countryCode,
   },
   geo: {
     '@type': 'GeoCoordinates',
-    latitude: 24.813974,
-    longitude: 121.3506816,
+    latitude: entity.latitude,
+    longitude: entity.longitude,
   },
+  hasMap: entity.mapsShareUrl,
+  sameAs: [entity.mapsShareUrl, entity.govtTourismUrl],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: googleReview.rating,
+    reviewCount: googleReview.ratingCount,
+    bestRating: googleReview.ratingScale,
+    worstRating: 1,
+  },
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: '台灣', item: 'https://JiaobanshanPark.com/' },
+    { '@type': 'ListItem', position: 2, name: '桃園市', item: 'https://JiaobanshanPark.com/' },
+    { '@type': 'ListItem', position: 3, name: '復興區', item: 'https://JiaobanshanPark.com/' },
+    { '@type': 'ListItem', position: 4, name: '角板山公園', item: 'https://JiaobanshanPark.com/' },
+  ],
 };
 
 const faqSchema = {
@@ -50,18 +83,22 @@ const faqSchema = {
 };
 ---
 
-<BaseLayout {title} {description}>
+<BaseLayout {title} {description} {ogTitle} {ogDescription}>
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(touristSchema)}></script>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)}></script>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
     <link
-      rel="preload"
-      as="image"
-      href="/images/plum-view-1440.avif"
-      type="image/avif"
-      imagesrcset="/images/plum-view-480.avif 480w, /images/plum-view-768.avif 768w, /images/plum-view-960.avif 960w, /images/plum-view-1440.avif 1440w, /images/plum-view-1920.avif 1920w"
-      imagesizes="100vw"
-      fetchpriority="high"
+      {...{
+        rel: 'preload',
+        as: 'image',
+        href: '/images/jiaobanshan-park-plum-1-1440.avif',
+        type: 'image/avif',
+        imagesrcset:
+          '/images/jiaobanshan-park-plum-1-480.avif 480w, /images/jiaobanshan-park-plum-1-768.avif 768w, /images/jiaobanshan-park-plum-1-960.avif 960w, /images/jiaobanshan-park-plum-1-1440.avif 1440w, /images/jiaobanshan-park-plum-1-1920.avif 1920w',
+        imagesizes: '100vw',
+        fetchpriority: 'high',
+      } as Record<string, string>}
     />
   </Fragment>
 
@@ -79,7 +116,9 @@ const faqSchema = {
         <a class="nav-link" href="#highlights">必看景點</a>
         <a class="nav-link" href="#routes">遊園路線</a>
         <a class="nav-link" href="#seasons">四季風景</a>
+        <a class="nav-link" href="#weather">天氣預報</a>
         <a class="nav-link" href="#transport">交通停車</a>
+        <a class="nav-link" href="#reviews">旅客評價</a>
         <a class="nav-link" href="#faq">常見問題</a>
       </nav>
 
@@ -113,7 +152,9 @@ const faqSchema = {
         <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#highlights">必看景點</a>
         <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#routes">遊園路線</a>
         <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#seasons">四季風景</a>
+        <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#weather">天氣預報</a>
         <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#transport">交通停車</a>
+        <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#reviews">旅客評價</a>
         <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#faq">常見問題</a>
       </div>
     </nav>
@@ -123,7 +164,7 @@ const faqSchema = {
     <section id="top" class="hero-noise relative min-h-[43rem] overflow-hidden bg-forest-950 pt-[var(--header-height)] text-white md:min-h-[50rem]">
       <div class="absolute inset-0 top-[var(--header-height)]">
         <ResponsiveImage
-          name="plum-view"
+          name="jiaobanshan-park-plum-1"
           alt="角板山梅園、大漢溪與山谷風景"
           width={2400}
           height={1800}
@@ -144,12 +185,22 @@ const faqSchema = {
             <span class="h-px w-9 bg-plum-300"></span>
             桃園・復興・北橫山城
           </p>
-          <h1 class="hero-title max-w-[9ch] text-cream-50">
+          <h1 class="hero-title max-w-[11ch] text-cream-50">
             <span class="small">JIAOBANSHAN PARK</span>
-            走進<br />角板山
+            走進<br />角板山公園
           </h1>
           <p class="mt-8 max-w-2xl text-base leading-8 text-cream-100/90 md:text-xl md:leading-9">
             在梅香、松林與山谷之間，走過歷史行館、戰備隧道與思親亭。這裡不只是一座公園，而是一段適合慢慢閱讀的北橫旅程。
+          </p>
+          <p class="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-cream-200/75">
+            <span class="font-semibold text-cream-100">{entity.country}</span>
+            <span class="text-cream-200/50">›</span>
+            <span class="font-semibold text-cream-100">{entity.stateProvince}</span>
+            <span class="text-cream-200/50">›</span>
+            <span class="font-semibold text-cream-100">{entity.city}</span>
+            <span class="text-cream-200/50">›</span>
+            <span class="font-semibold text-cream-100">角板山公園</span>
+            <span class="ml-1 rounded-full bg-white/10 px-2.5 py-0.5 text-xs tracking-wide text-cream-200">{entity.fullNameEn}，{entity.stateProvinceEn}，{entity.countryEn}</span>
           </p>
           <div class="mt-9 flex flex-col gap-3 sm:flex-row">
             <a href="#routes" class="primary-btn">
@@ -200,16 +251,30 @@ const faqSchema = {
       </div>
     </section>
 
+    <WeatherWidget />
+
     <section class="section-pad overflow-hidden bg-cream-50">
       <div class="container-shell grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div class="reveal">
           <p class="eyebrow">WHY JIAOBANSHAN</p>
           <h2 class="section-title">一座公園，讀懂山城的多重風景</h2>
           <p class="section-lead mt-7">
+            歡迎來到角板山公園（<span class="font-semibold text-forest-900">Jiaobanshan Park</span>）——位於{entity.country}{entity.stateProvince}{entity.city}澤仁里的山林公園，也是認識北橫山城最重要的核心景點之一。以語意來說，角板山公園（Jiaobanshan Park）與角板山行館園區常被視為同一片核心遊憩範圍。
+          </p>
+          <p class="section-lead mt-4">
             角板山的魅力不只在梅花。行館留下時代記憶，樟腦收納所連結山地產業，戰備隧道藏進林下，思親亭則把視線帶向大漢溪與溪口台地。
           </p>
           <p class="section-lead mt-4">
             即使不是花季，老樹、草地、戶外雕塑與山谷氣候，仍足以構成一趟舒服的半日散步。
+          </p>
+          <p class="mt-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-stonewarm-500">
+            <span class="font-semibold text-forest-800">角板山公園</span>
+            <span>›</span>
+            <span class="font-semibold text-forest-800">{entity.city}</span>
+            <span>›</span>
+            <span class="font-semibold text-forest-800">{entity.stateProvince}</span>
+            <span>›</span>
+            <span class="font-semibold text-forest-800">{entity.country}</span>
           </p>
           <div class="mt-8 grid grid-cols-2 gap-5 border-t border-stonewarm-200 pt-7 sm:grid-cols-3">
             <div><p class="font-serif text-3xl font-bold text-forest-900">6+</p><p class="mt-1 text-sm text-stonewarm-500">主題景點</p></div>
@@ -221,7 +286,7 @@ const faqSchema = {
         <div class="relative reveal">
           <div class="photo-card aspect-[4/3]">
             <ResponsiveImage
-              name="hero-resort"
+              name="jiaobanshan-park-resort-1"
               alt="樹蔭環繞的角板山行館"
               width={960}
               height={640}
@@ -359,20 +424,124 @@ const faqSchema = {
       </div>
     </section>
 
+    <AudienceRoutes />
+
     <section class="photo-ribbon overflow-hidden bg-cream-50 py-4 md:py-10">
       <div class="container-shell grid grid-cols-2 gap-3 md:grid-cols-12 md:gap-4">
         <figure class="photo-card col-span-2 aspect-[16/10] md:col-span-7 md:row-span-2 md:aspect-auto md:min-h-[34rem]">
-          <ResponsiveImage name="entrance" alt="角板山行館園區入口與林蔭" width={960} height={720} class="h-full w-full object-cover" position="50% 50%" />
+          <ResponsiveImage name="jiaobanshan-park-entrance-1" alt="角板山行館園區入口與林蔭" width={960} height={720} class="h-full w-full object-cover" position="50% 50%" />
           <figcaption class="absolute bottom-4 left-4 rounded-full bg-forest-950/75 px-4 py-2 text-xs font-bold text-white backdrop-blur">從林蔭入口開始散步</figcaption>
         </figure>
         <figure class="photo-card aspect-square md:col-span-5 md:aspect-auto md:min-h-[16.5rem]">
-          <ResponsiveImage name="tunnel" alt="角板山戰備隧道入口" width={960} height={539} class="h-full w-full object-cover" position="50% 50%" />
+          <ResponsiveImage name="jiaobanshan-park-tunnel-1" alt="角板山戰備隧道入口" width={960} height={539} class="h-full w-full object-cover" position="50% 50%" />
           <figcaption class="sr-only">戰備隧道藏在林下山壁之中</figcaption>
         </figure>
         <figure class="photo-card aspect-square md:col-span-5 md:aspect-auto md:min-h-[16.5rem]">
-          <ResponsiveImage name="camphor-house" alt="角板山樟腦收納所木造空間" width={960} height={720} class="h-full w-full object-cover" position="50% 52%" />
+          <ResponsiveImage name="jiaobanshan-park-camphor-1" alt="角板山樟腦收納所木造空間" width={960} height={720} class="h-full w-full object-cover" position="50% 52%" />
           <figcaption class="sr-only">樟腦收納所保存山城產業記憶</figcaption>
         </figure>
+      </div>
+    </section>
+
+    <section id="around" class="mountain-section section-pad bg-forest-950 text-white">
+      <div class="container-shell">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+          <div class="reveal">
+            <p class="eyebrow !text-plum-300">LANDMARKS & ATTRACTIONS AROUND</p>
+            <h2 class="section-title !text-cream-50">角板山公園周邊可順遊的地標</h2>
+          </div>
+          <p class="max-w-2xl text-base leading-8 text-cream-200/75 lg:justify-self-end lg:text-lg">
+            造訪角板山公園（Jiaobanshan Park）時，可一併走訪周邊的歷史地標與自然景點，包括{entity.nearbyLandmark1} 與 {entity.nearbyLandmark2}，把半日行程串得更完整。
+          </p>
+        </div>
+
+        <div class="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <article class="reveal rounded-2xl border border-cream-100/14 bg-white/5 p-6">
+            <span class="grid size-12 place-items-center rounded-full bg-forest-100 text-forest-700"><Icon name="mountain" class="size-6" /></span>
+            <h3 class="mt-5 text-xl font-bold text-cream-50">角板山行館</h3>
+            <p class="mt-3 text-sm leading-7 text-cream-200/74">林蔭中的白色行館，是園區最具代表性的歷史空間，與角板山公園同屬核心遊憩範圍。</p>
+          </article>
+          <article class="reveal rounded-2xl border border-cream-100/14 bg-white/5 p-6">
+            <span class="grid size-12 place-items-center rounded-full bg-forest-100 text-forest-700"><Icon name="map-pin" class="size-6" /></span>
+            <h3 class="mt-5 text-xl font-bold text-cream-50">大漢溪與溪口台地</h3>
+            <p class="mt-3 text-sm leading-7 text-cream-200/74">思親亭與梅園遠眺的層疊山谷，是角板山視野最被稱道的畫面之一。</p>
+          </article>
+          <article class="reveal rounded-2xl border border-cream-100/14 bg-white/5 p-6">
+            <span class="grid size-12 place-items-center rounded-full bg-forest-100 text-forest-700"><Icon name="leaf" class="size-6" /></span>
+            <h3 class="mt-5 text-xl font-bold text-cream-50">北橫與復興區商圈</h3>
+            <p class="mt-3 text-sm leading-7 text-cream-200/74">沿台 7 線的北橫山城，串起在地午餐、季節水果與角板山商圈，適合慢遊半日。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="history" class="section-pad bg-cream-50">
+      <div class="container-shell">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div class="reveal">
+            <p class="eyebrow">HISTORY & SIGNIFICANCE</p>
+            <h2 class="section-title">角板山公園的歷史、故事與傳說</h2>
+            <p class="section-lead mt-6">角板山不是一夜成形的景點。從原住民族的山林領域、山地產業，到行館與北橫公路，每一層都疊著不同的時代。下面用現場解說與公開資料能印證的脈絡，幫你把風景讀厚一點。</p>
+          </div>
+          <div class="reveal grid gap-4 sm:grid-cols-2">
+            <article class="detail-card">
+              <Icon name="book-open" class="size-7 text-plum-600" />
+              <h3 class="mt-5 text-lg font-bold text-forest-900">地名從「斯可巴」開始</h3>
+              <p class="mt-3 text-sm leading-7 text-stonewarm-700">角板山一帶在泰雅族語中被稱為「斯可巴」（Sqoyaw），是當地重要的聚落與領域稱呼；今日地名是後來漢語音譯與轉寫的結果。</p>
+            </article>
+            <article class="detail-card">
+              <Icon name="mountain" class="size-7 text-plum-600" />
+              <h3 class="mt-5 text-lg font-bold text-forest-900">山城產業起點</h3>
+              <p class="mt-3 text-sm leading-7 text-stonewarm-700">清領至日治時期，周邊樟樹資源帶動樟腦產業，樟腦收納所保存了這段「山城因產業而聚」的記憶。</p>
+            </article>
+            <article class="detail-card">
+              <Icon name="camera" class="size-7 text-plum-600" />
+              <h3 class="mt-5 text-lg font-bold text-forest-900">行館與接待空間</h3>
+              <p class="mt-3 text-sm leading-7 text-stonewarm-700">戰後角板山行館成為重要的接待與行政空間，白色建築與林蔭構成園區最具代表性的歷史畫面，也被稱為「小廬山」。</p>
+            </article>
+            <article class="detail-card">
+              <Icon name="route" class="size-7 text-plum-600" />
+              <h3 class="mt-5 text-lg font-bold text-forest-900">北橫與觀光</h3>
+              <p class="mt-3 text-sm leading-7 text-stonewarm-700">1960 年代北橫公路（台 7 線）開通，把角板山帶進大眾觀光，山城從產業據點轉為休息與散步的據點。</p>
+            </article>
+            <article class="detail-card">
+              <Icon name="info" class="size-7 text-plum-600" />
+              <h3 class="mt-5 text-lg font-bold text-forest-900">戰備與防護</h3>
+              <p class="mt-3 text-sm leading-7 text-stonewarm-700">戰備隧道是冷戰與戒嚴時期留下的防護設施，藏於林下山壁；今天它是最能「走進時代」的展示空間。</p>
+            </article>
+            <article class="detail-card">
+              <Icon name="leaf" class="size-7 text-plum-600" />
+              <h3 class="mt-5 text-lg font-bold text-forest-900">梅園與思親亭</h3>
+              <p class="mt-3 text-sm leading-7 text-stonewarm-700">冬日梅花是角板山最被記住的季節符號；思親亭則把視線拉向大漢溪與溪口台地，是理解「為什麼選在這片山腰」的關鍵。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="mt-14 reveal">
+          <p class="eyebrow">STORIES & LEGENDS</p>
+          <h3 class="mt-2 font-serif text-3xl font-bold tracking-tight text-forest-900 md:text-4xl">故事與傳說：讓風景更有溫度</h3>
+          <div class="mt-8 grid gap-4 md:grid-cols-3">
+            <article class="rounded-2xl border border-stonewarm-200 bg-white p-6">
+              <span class="grid size-11 place-items-center rounded-full bg-forest-100 text-forest-700"><Icon name="book-open" class="size-5" /></span>
+              <h4 class="mt-4 text-lg font-bold text-forest-900">斯可巴的聚落</h4>
+              <p class="mt-2 text-sm leading-7 text-stonewarm-700">在泰雅族語裡，「斯可巴」指的不只是地名，更是一處沿溪流台地形成的聚落與生活領域；認識這個起點，才能看懂它做為原住民族傳統領域的意義。</p>
+            </article>
+            <article class="rounded-2xl border border-stonewarm-200 bg-white p-6">
+              <span class="grid size-11 place-items-center rounded-full bg-forest-100 text-forest-700"><Icon name="camera" class="size-5" /></span>
+              <h4 class="mt-4 text-lg font-bold text-forest-900">「小廬山」的行館</h4>
+              <p class="mt-2 text-sm leading-7 text-stonewarm-700">角板山行館因林蔭、白色建築與山谷視野，被形容為「小廬山」。這個稱號反映的，是當年人們對這片山腰視野的珍視，而非單一建築本身。</p>
+            </article>
+            <article class="rounded-2xl border border-stonewarm-200 bg-white p-6">
+              <span class="grid size-11 place-items-center rounded-full bg-forest-100 text-forest-700"><Icon name="sparkles" class="size-5" /></span>
+              <h4 class="mt-4 text-lg font-bold text-forest-900">從梅花到盛事</h4>
+              <p class="mt-2 text-sm leading-7 text-stonewarm-700">賞梅原本是地方的生活習慣，隨著北橫公路通車與觀光發展，逐漸成為北橫沿線最具代表性的季節盛事，也讓角板山有了「冬日要來一次」的記憶點。</p>
+            </article>
+          </div>
+        </div>
+
+        <p class="mt-7 text-xs leading-6 text-stonewarm-500">
+          以上為依園區現場展示與公開資料整理的脈絡說明，細節與開放情形請以現場導覽與官方公告為準；涉及歷史年代與人物，建議以官方史料與現場解說牌為準。
+        </p>
       </div>
     </section>
 
@@ -414,6 +583,8 @@ const faqSchema = {
       </div>
     </section>
 
+    <SeasonalStrategy />
+
     <section id="transport" class="section-pad bg-forest-50">
       <div class="container-shell grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <div class="reveal">
@@ -453,8 +624,9 @@ const faqSchema = {
               <div>
                 <p class="text-xs font-bold tracking-[0.15em] text-plum-600">DESTINATION</p>
                 <h3 class="mt-2 font-serif text-2xl font-bold text-forest-900">角板山行館園區</h3>
-                <p class="mt-2 text-sm leading-7 text-stonewarm-700">桃園市復興區澤仁里中正路 133-1 號</p>
-                <p class="mt-1 text-sm text-stonewarm-500">座標：24.813974, 121.3506816</p>
+                <p class="mt-2 text-sm leading-7 text-stonewarm-700">{entity.postalCode}{entity.country}{entity.stateProvince}{entity.city}{entity.streetAddress}</p>
+                <p class="mt-1 text-sm text-stonewarm-500">行館園區常用導航地址：{entity.streetAddressAlt}</p>
+                <p class="mt-1 text-sm text-stonewarm-500">座標：{entity.latitude}, {entity.longitude}</p>
               </div>
               <a href={mapUrl} target="_blank" rel="nofollow noopener" class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-forest-900 px-6 text-sm font-bold text-white hover:bg-forest-800">
                 <Icon name="map-pin" class="size-4" />導航前往
@@ -484,6 +656,8 @@ const faqSchema = {
         </figure>
       </div>
     </section>
+
+    <VisitorServices />
 
     <section class="section-pad bg-cream-50">
       <div class="container-shell">
@@ -518,16 +692,26 @@ const faqSchema = {
       </div>
     </section>
 
+    <GoogleReviews />
+
     <section id="faq" class="section-pad bg-cream-100">
       <div class="container-shell grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
         <div class="reveal lg:sticky lg:top-28 lg:self-start">
           <p class="eyebrow">BEFORE YOU GO</p>
-          <h2 class="section-title">出發前，最常被問的八件事</h2>
+          <h2 class="section-title">出發前，最常被問的事</h2>
           <p class="section-lead mt-6">把門票、花期、路線與天候先釐清，現場就不必一直查手機。</p>
         </div>
         <div class="reveal">
+          <nav class="faq-jump mb-4 flex flex-wrap gap-2" aria-label="常見問題快速連結">
+            <a class="rounded-full border border-forest-900/15 px-3 py-1.5 text-xs font-semibold text-forest-800 hover:bg-forest-50" href="#faq-transport-car">交通怎麼去</a>
+            <a class="rounded-full border border-forest-900/15 px-3 py-1.5 text-xs font-semibold text-forest-800 hover:bg-forest-50" href="#faq-transport-bus">搭公車</a>
+            <a class="rounded-full border border-forest-900/15 px-3 py-1.5 text-xs font-semibold text-forest-800 hover:bg-forest-50" href="#faq-parking">停車場</a>
+            <a class="rounded-full border border-forest-900/15 px-3 py-1.5 text-xs font-semibold text-forest-800 hover:bg-forest-50" href="#faq-opening">開放時間</a>
+            <a class="rounded-full border border-forest-900/15 px-3 py-1.5 text-xs font-semibold text-forest-800 hover:bg-forest-50" href="#faq-plum-season">梅花季幾月</a>
+            <a class="rounded-full border border-forest-900/15 px-3 py-1.5 text-xs font-semibold text-forest-800 hover:bg-forest-50" href="#faq-plum-best-time">賞梅最佳時間</a>
+          </nav>
           {faqs.map((faq, index) => (
-            <details class="faq-item group py-5" open={index === 0}>
+            <details class="faq-item group py-5" open={index === 0} id={`faq-${faq.id}`}>
               <summary class="flex items-center justify-between gap-5 py-2 text-left">
                 <h3 class="text-base font-bold leading-7 text-forest-900 md:text-lg">{faq.question}</h3>
                 <span class="faq-icon grid size-8 shrink-0 place-items-center rounded-full border border-forest-900/15 text-forest-800"><Icon name="chevron-down" class="size-4" /></span>
@@ -539,9 +723,13 @@ const faqSchema = {
       </div>
     </section>
 
+    <SourcesSection />
+
+    <VisitorResponsibility />
+
     <section class="mountain-section relative overflow-hidden bg-forest-950 py-20 text-white md:py-28">
       <div class="absolute inset-0 opacity-25">
-        <ResponsiveImage name="park-grounds" alt="" width={960} height={720} class="h-full w-full object-cover" sizes="100vw" position="50% 45%" />
+        <ResponsiveImage name="jiaobanshan-park-grounds-1" alt="角板山公園草坪與林蔭散步道，遠眺北橫山城" width={960} height={720} class="h-full w-full object-cover" sizes="100vw" position="50% 45%" />
       </div>
       <div class="absolute inset-0 bg-forest-950/78"></div>
       <div class="container-shell relative text-center reveal">
@@ -569,15 +757,21 @@ const faqSchema = {
         <div class="flex flex-wrap gap-x-6 gap-y-3 text-sm text-cream-200/70">
           <a href="#highlights" class="hover:text-white">必看景點</a>
           <a href="#routes" class="hover:text-white">遊園路線</a>
+          <a href="#weather" class="hover:text-white">天氣預報</a>
           <a href="#transport" class="hover:text-white">交通停車</a>
+          <a href="#services" class="hover:text-white">訪客服務</a>
+          <a href="#reviews" class="hover:text-white">旅客評價</a>
+          <a href="#sources" class="hover:text-white">資料來源</a>
           <a href="#faq" class="hover:text-white">常見問題</a>
         </div>
       </div>
 
       <div class="grid gap-6 py-8 text-xs leading-6 text-cream-200/55 md:grid-cols-[1fr_auto] md:items-start">
         <div>
-          <p>本網站為非官方旅遊資訊網站。</p>
-          <details class="mt-4 max-w-2xl">
+        <p>本網站為非官方旅遊資訊網站。</p>
+        <p class="mt-2">本網站所展示的所有圖片產權及版權均歸原攝影者所有，授權方式依各圖片原始來源標示。</p>
+        <p class="mt-2">{googleReview.sourceNote}</p>
+        <details class="mt-4 max-w-2xl">
             <summary class="cursor-pointer font-bold text-cream-200/75 hover:text-white">實景照片來源與授權</summary>
             <ul class="mt-3 space-y-2 border-l border-white/10 pl-4">
               {photoCredits.map((credit) => (

@@ -1,0 +1,37 @@
+---
+import Icon from '@/components/Icon.astro';
+import { visitorServices } from '@/data/site';
+---
+
+<section id="services" class="section-pad bg-cream-50">
+  <div class="container-shell">
+    <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+      <div class="reveal">
+        <p class="eyebrow">VISITOR SERVICES</p>
+        <h2 class="section-title">訪客服務與周邊設施</h2>
+      </div>
+      <p class="section-lead lg:justify-self-end">
+        出發前先掌握園區與復興區常見的設施類型，把「要不要帶傘、在哪補給、車停哪」一次想好。以下僅列出常見類型，不推薦特定商家。
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {visitorServices.map((service) => (
+        <article class="detail-card reveal">
+          <span class="grid size-12 place-items-center rounded-full bg-forest-100 text-forest-700">
+            <Icon name={service.icon} class="size-6" />
+          </span>
+          <div class="mt-5 flex items-baseline gap-2">
+            <h3 class="text-lg font-bold text-forest-900">{service.title}</h3>
+            <span class="rounded-full bg-plum-100/70 px-2.5 py-0.5 text-xs font-bold text-plum-600">{service.type}</span>
+          </div>
+          <p class="mt-3 text-sm leading-7 text-stonewarm-700">{service.body}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="mt-8 rounded-2xl border border-forest-900/10 bg-cream-100 p-5 text-sm leading-7 text-stonewarm-700">
+      <span class="font-bold text-forest-900">中立客觀說明：</span>本站為非營利科普網站，僅整理遊客常關心的設施類型供規劃參考，不推薦、不代言任何特定商家；實際營業狀態、價格與有無，請以現場與官方公告為準。
+    </p>
+  </div>
+</section>

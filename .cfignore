@@ -1,0 +1,10 @@
+# Cloudflare Workers 部署時排除（搭配手動上傳 dist 使用）
+.git
+node_modules
+*.log
+.DS_Store
+.wrangler
+.dev.vars
+.env
+.env.*
+.astro

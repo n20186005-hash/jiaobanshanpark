@@ -1,0 +1,266 @@
+---
+import { fetchWeather } from '@/lib/weather';
+import { entity } from '@/data/site';
+
+const location = `${entity.stateProvince}${entity.city}`;
+const initial = await fetchWeather(entity.latitude, entity.longitude, location);
+---
+
+<section id="weather" class="section-pad bg-forest-50">
+  <div class="container-shell">
+    <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+      <div class="reveal">
+        <p class="eyebrow">LIVE WEATHER</p>
+        <h2 class="section-title">角板山公園即時天氣與 7 日預報</h2>
+      </div>
+      <p class="section-lead lg:justify-self-end">
+        山區天氣變化快。這裡不只看溫度，還直接告訴你今天怎麼穿、行程怎麼排、出門要帶什麼；資料每半小時自動更新。
+      </p>
+    </div>
+
+    <div
+      class="mt-12 reveal rounded-[2rem] border border-forest-900/10 bg-white p-6 shadow-[0_25px_80px_rgba(23,55,45,0.08)] md:p-8"
+      data-weather-root
+      data-lat={entity.latitude}
+      data-lon={entity.longitude}
+      data-location={location}
+    >
+      <div data-weather-out>
+        <p class="text-sm text-stonewarm-500">天氣資料載入中…</p>
+      </div>
+    </div>
+    <script type="application/json" data-weather-init is:inline set:html={JSON.stringify(initial)}></script>
+  </div>
+</section>
+
+<script>
+  type WeatherIcon = 'sun' | 'cloud-sun' | 'cloud' | 'cloud-rain' | 'cloud-snow';
+
+  interface WeatherAdvice {
+    risks: string[];
+    dress: string[];
+    plan: string[];
+    gear: string[];
+  }
+  interface WeatherDay {
+    date: string;
+    label: string;
+    icon: WeatherIcon;
+    condition: string;
+    tmax: number;
+    tmin: number;
+    rainProb: number;
+    rainHint: string;
+    windLabel: string;
+    uvLabel: string;
+    humidityLabel: string;
+    summary: string;
+    advice: WeatherAdvice;
+  }
+  interface WeatherNow {
+    temp: number;
+    feels: number;
+    humidity: number;
+    humidityLabel: string;
+    windLabel: string;
+    uvLabel: string;
+    icon: WeatherIcon;
+    condition: string;
+    rainProb: number;
+    rainHint: string;
+    summary: string;
+  }
+  interface WeatherPayload {
+    updated: string;
+    location: string;
+    now: WeatherNow;
+    days: WeatherDay[];
+  }
+
+  const ICONS: Record<WeatherIcon, string> = {
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.5 5.5 7 7M17 17l1.5 1.5M19 5l-1.5 1.5M6.5 17.5 5 19"/>',
+    'cloud-sun': '<circle cx="7.5" cy="7.5" r="2.5"/><path d="M7 10a5 5 0 0 1 9.5 1.2A3.5 3.5 0 1 1 16.5 18H8a4 4 0 0 1-1-8Z"/>',
+    cloud: '<path d="M7 18a4 4 0 1 1 .5-7.9A5 5 0 0 1 17 11a3.5 3.5 0 1 1 0 7H7Z"/>',
+    'cloud-rain': '<path d="M7 15a4 4 0 1 1 .5-7.9A5 5 0 0 1 17 8a3.5 3.5 0 1 1 0 7H7Z"/><path d="M8 18l-1 2.5M12 18l-1 2.5M16 18l-1 2.5"/>',
+    'cloud-snow': '<path d="M7 14a4 4 0 1 1 .5-7.9A5 5 0 0 1 17 7a3.5 3.5 0 1 1 0 7H7Z"/><path d="M9 18.5h.01M12 19.5h.01M15 18.5h.01"/>',
+  };
+
+  function svg(icon: WeatherIcon, cls: string): string {
+    return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[icon]}</svg>`;
+  }
+
+  function escapeHtml(value: string): string {
+    return value.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] as string);
+  }
+
+  function shortUv(label: string): string {
+    return label.replace('紫外線', '');
+  }
+
+  function formatUpdated(iso: string): string {
+    const d = new Date(iso);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function listBlock(title: string, items: string[]): string {
+    if (items.length === 0) return '';
+    return `
+      <div>
+        <p class="text-sm font-bold text-forest-900">${escapeHtml(title)}</p>
+        <ul class="mt-3 space-y-2 text-sm leading-6 text-stonewarm-700">
+          ${items.map((item) => `<li class="flex gap-2"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-forest-400"></span><span>${escapeHtml(item)}</span></li>`).join('')}
+        </ul>
+      </div>`;
+  }
+
+  function renderAdvice(day: WeatherDay): string {
+    const risks = day.advice.risks;
+    const riskBlock =
+      risks.length > 0
+        ? `<div class="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 md:p-5">
+             <p class="text-sm font-bold text-red-700">⚠️ 風險提醒（請優先留意）</p>
+             <ul class="mt-3 space-y-2 text-sm leading-6 text-red-800">
+               ${risks.map((r) => `<li class="flex gap-2"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-red-500"></span><span>${escapeHtml(r)}</span></li>`).join('')}
+             </ul>
+           </div>`
+        : '';
+
+    return `
+      <div class="mt-6 rounded-2xl border border-stonewarm-200 bg-cream-50 p-5 md:p-6">
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <p class="font-bold text-forest-900">${escapeHtml(day.label)}．出遊建議</p>
+          <p class="text-xs text-stonewarm-500">${escapeHtml(day.summary)}</p>
+        </div>
+        ${riskBlock}
+        <div class="grid gap-6 md:grid-cols-3">
+          ${listBlock('✅ 出行穿搭', day.advice.dress)}
+          ${listBlock('🧭 遊玩安排', day.advice.plan)}
+          ${listBlock('🎒 隨身物品', day.advice.gear)}
+        </div>
+      </div>`;
+  }
+
+  function renderNow(now: WeatherNow): string {
+    const umbrella = now.rainHint.includes('不必帶傘')
+      ? 'bg-forest-100 text-forest-800'
+      : 'bg-plum-100/80 text-plum-700';
+    return `
+      <div class="rounded-2xl bg-forest-900 p-6 text-white md:p-7">
+        <p class="text-xs font-bold tracking-[0.16em] text-plum-300" data-location-label></p>
+        <div class="mt-3 flex items-end gap-3">
+          <span class="text-forest-200">${svg(now.icon, 'size-12')}</span>
+          <span class="font-serif text-6xl font-bold leading-none">${now.temp}°</span>
+        </div>
+        <p class="mt-3 text-lg font-bold text-cream-50">${escapeHtml(now.condition)}</p>
+        <p class="mt-1 text-sm text-cream-200/80">${escapeHtml(now.summary)}</p>
+        <dl class="mt-6 grid grid-cols-2 gap-3 border-t border-white/12 pt-5 text-sm sm:grid-cols-3">
+          <div><dt class="text-cream-200/60">體感</dt><dd class="mt-1 font-bold text-cream-50">${now.feels}°</dd></div>
+          <div><dt class="text-cream-200/60">降雨機率</dt><dd class="mt-1 font-bold text-cream-50">${now.rainProb}%</dd></div>
+          <div><dt class="text-cream-200/60">風力</dt><dd class="mt-1 font-bold text-cream-50">${escapeHtml(now.windLabel)}</dd></div>
+          <div><dt class="text-cream-200/60">紫外線</dt><dd class="mt-1 font-bold text-cream-50">${escapeHtml(shortUv(now.uvLabel))}</dd></div>
+          <div><dt class="text-cream-200/60">濕度感受</dt><dd class="mt-1 font-bold text-cream-50">${escapeHtml(now.humidityLabel)}</dd></div>
+        </dl>
+        <p class="mt-5 inline-flex items-center gap-2 rounded-full ${umbrella} px-4 py-2 text-sm font-bold">
+          ${svg('cloud-rain', 'size-4')}出門要不要帶傘：${escapeHtml(now.rainHint)}
+        </p>
+      </div>`;
+  }
+
+  function renderDays(days: WeatherDay[], selected: number): string {
+    const cards = days
+      .map((day, index) => {
+        const active = index === selected;
+        const hasRisk = day.advice.risks.length > 0;
+        return `
+        <li>
+          <button
+            type="button"
+            data-day-index="${index}"
+            aria-pressed="${active}"
+            class="w-full rounded-2xl border p-3 text-center transition ${active ? 'border-forest-700 bg-forest-50 ring-2 ring-forest-600/30' : 'border-stonewarm-200 bg-white hover:border-forest-300 hover:bg-forest-50/60'}"
+          >
+            <p class="text-xs font-bold tracking-[0.08em] text-stonewarm-500">${escapeHtml(day.label)}</p>
+            <div class="my-2 flex justify-center text-forest-700">${svg(day.icon, 'size-7')}</div>
+            <p class="text-xs font-bold text-forest-900">${escapeHtml(day.condition)}</p>
+            <p class="mt-1.5 text-sm text-stonewarm-700"><span class="font-bold text-forest-900">${day.tmax}°</span> / ${day.tmin}°</p>
+            <p class="mt-1 text-xs ${day.rainProb >= 60 ? 'text-plum-600' : 'text-stonewarm-500'}">降雨 ${day.rainProb}%</p>
+            ${hasRisk ? '<p class="mt-1 text-[11px] font-bold text-red-600">⚠️ 有風險</p>' : ''}
+          </button>
+        </li>`;
+      })
+      .join('');
+
+    return `
+      <div class="flex h-full flex-col">
+        <p class="mb-3 text-xs font-bold tracking-[0.14em] text-stonewarm-500">未來七天預報（點選看當天建議）</p>
+        <ul class="grid flex-1 grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-7">${cards}</ul>
+      </div>`;
+  }
+
+  function render(data: WeatherPayload, selected: number): string {
+    const day = data.days[selected] ?? data.days[0];
+    return `
+      <div class="grid gap-6 lg:grid-cols-[1.05fr_1.45fr] lg:items-stretch">
+        ${renderNow(data.now)}
+        ${renderDays(data.days, selected)}
+      </div>
+      ${day ? renderAdvice(day) : ''}
+      <p class="mt-5 text-xs text-stonewarm-500">氣象更新：${formatUpdated(data.updated)}（每 30 分鐘重新整理）</p>`;
+  }
+
+  function showError(root: HTMLElement) {
+    const out = root.querySelector<HTMLElement>('[data-weather-out]');
+    if (out && !out.dataset.rendered) {
+      out.innerHTML = '<p class="text-sm text-stonewarm-500">暫時無法取得天氣資料，請稍後再試；山區天候請以現場與最新氣象預報為準。</p>';
+    }
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-weather-root]');
+  if (root) {
+    const out = root.querySelector<HTMLElement>('[data-weather-out]');
+    let payload: WeatherPayload | null = null;
+    let selected = 0;
+
+    function paint() {
+      if (!out || !payload) return;
+      out.dataset.rendered = 'true';
+      out.innerHTML = render(payload, selected);
+      const label = out.querySelector<HTMLElement>('[data-location-label]');
+      if (label) label.textContent = payload.location;
+    }
+
+    root.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement | null;
+      const button = target?.closest<HTMLElement>('[data-day-index]');
+      if (!button) return;
+      selected = Number(button.dataset.dayIndex ?? 0);
+      paint();
+    });
+
+    const init = document.querySelector<HTMLScriptElement>('[data-weather-init]');
+    if (init && init.textContent) {
+      try {
+        const parsed = JSON.parse(init.textContent) as WeatherPayload | null;
+        if (parsed && parsed.days?.length) {
+          payload = parsed;
+          paint();
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+
+    const lat = root.dataset.lat ?? '24.813974';
+    const lon = root.dataset.lon ?? '121.3506816';
+    fetch(`/api/weather?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: WeatherPayload | null) => {
+        if (data && data.days?.length) {
+          payload = data;
+          paint();
+        }
+      })
+      .catch(() => showError(root));
+  }
+</script>

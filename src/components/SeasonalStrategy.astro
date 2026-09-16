@@ -1,0 +1,53 @@
+---
+import { seasonalStrategy } from '@/data/site';
+---
+
+<section id="strategy" class="section-pad bg-forest-50">
+  <div class="container-shell">
+    <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+      <div class="reveal">
+        <p class="eyebrow">SEASONAL STRATEGY</p>
+        <h2 class="section-title">按季節規劃的角板山遊覽策略</h2>
+      </div>
+      <p class="section-lead lg:justify-self-end">
+        山區的氣象、水文與動物活動隨季節明顯變化。下表把四季的「天氣、步道水文、野生動植物、遊覽建議」放在一起看，幫你選對出發的季節與節奏。
+      </p>
+    </div>
+
+    <div class="mt-12 overflow-hidden rounded-[2rem] border border-forest-900/10 bg-white shadow-[0_25px_80px_rgba(23,55,45,0.08)]">
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[760px] border-collapse text-left text-sm">
+          <thead>
+            <tr class="bg-forest-900 text-cream-50">
+              <th class="px-5 py-4 font-bold">季節</th>
+              <th class="px-5 py-4 font-bold">氣象概況</th>
+              <th class="px-5 py-4 font-bold">水文與步道</th>
+              <th class="px-5 py-4 font-bold">野生動植物觀察</th>
+              <th class="px-5 py-4 font-bold">遊覽建議</th>
+            </tr>
+          </thead>
+          <tbody>
+            {seasonalStrategy.map((row, index) => (
+              <tr class="border-t border-stonewarm-200 align-top" class:list={[index % 2 === 1 && 'bg-cream-50/60']}>
+                <td class="px-5 py-5">
+                  <span class="font-serif text-3xl font-bold text-forest-900">{row.season}</span>
+                </td>
+                <td class="px-5 py-5 text-stonewarm-700 leading-7">{row.weather}</td>
+                <td class="px-5 py-5 text-stonewarm-700 leading-7">{row.waterTrail}</td>
+                <td class="px-5 py-5 text-stonewarm-700 leading-7">
+                  {row.wildlife}
+                  {row.wildlifeNote && <span class="mt-2 block text-xs text-stonewarm-500">{row.wildlifeNote}</span>}
+                </td>
+                <td class="px-5 py-5 text-stonewarm-700 leading-7">{row.advice}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="mt-6 text-xs leading-6 text-stonewarm-500">
+      氣候參考採臺灣本島山地氣候的常年趨勢整理，實際溫度、降雨與花況仍以中央氣象署當日預報與現場公告為準；出發前請再確認天氣與開放資訊。
+    </p>
+  </div>
+</section>

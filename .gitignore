@@ -1,6 +1,23 @@
-node_modules/
-dist/
-.astro/
-.wrangler/
-.DS_Store
+# 依賴與建置產物
+node_modules
+dist
+.astro
+.wrangler
+.dev.vars
+
+# 環境與本機設定
+.env
+.env.*
+*.local
+
+# 日誌與暫存
 *.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.cache
+
+# 編輯器
+.idea
+.vscode
+*.swp

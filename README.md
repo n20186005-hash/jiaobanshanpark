@@ -10,7 +10,11 @@
 - pnpm
 - Cloudflare Workers Static Assets
 - 無資料庫、無登入、無 CMS
+- PWA：支援 `manifest` 與離線快取的 Service Worker（`public/sw.js`）；圖示由 `scripts/generate_icons.py` 產生至 `public/icons/`
+- 天氣模組：`src/components/WeatherWidget.astro` 在構建時取得初始資料，並於瀏覽器端向 `src/worker.ts` 的 `/api/weather` 重新整理；Worker 端向天氣服務取得資料並以 Cache API 快取約 30 分鐘（伺服器端取得與快取，前端只顯示天氣）
+- 天氣建議邏輯：`src/lib/weather-advice.ts` 依天氣代碼、最高／最低溫、降雨機率、累積雨量、風速與陣風、紫外線，動態產生「風險提醒／出行穿搭／遊玩安排／隨身物品」，條件不成立就不顯示；文案以角板山的山地與溪谷情境為主
 - GA4：`G-HXM22WWPKP`
+- 圖片產權：所有展示圖片之產權及版權均歸原攝影者所有，依原始來源標示授權
 
 ## 本機開發
 
@@ -54,13 +58,30 @@ pnpm deploy
 
 ## 圖片
 
-實景照片已下載到 `public/images/`，並產生 480 / 768 / 960 像素的 AVIF 與 WebP 版本。原始作者及 Creative Commons 授權列在網站頁尾折疊區。
+實景照片已下載到 `public/images/`，並產生 480 / 768 / 960 / 1440 / 1920 像素的 AVIF 與 WebP 版本。原始作者及 Creative Commons 授權列在 `PHOTO-CREDITS.md` 與網站頁尾折疊區。
 
-重新處理圖片：
+照片命名規範：`<景點>-<場景>-<序號>.jpg`（例如 `jiaobanshan-park-resort-1.jpg`），衍生檔由腳本依同一字幹產生；更換圖片請沿用此命名並重新產生衍生檔。
+
+重新處理圖片（含重新壓縮與 OG 圖）：
 
 ```bash
 pnpm images
 ```
+
+重新產生 PWA 圖示：
+
+```bash
+python scripts/generate_icons.py
+```
+
+## 評價與來源說明
+
+Google 地圖評分（4.3 / 13,171 則，同步於 2026 年 9 月）僅展示於頁面，不寫入 JSON-LD；評價同步自 Google 地圖使用者評價，版權歸原作者與 Google 地圖所有。所有 Google 外部連結均保留至 Google 地圖。
+
+## 忽略檔案
+
+- `.gitignore`：排除 `node_modules`、`dist`、`.astro`、`wrangler` 等不需要提交的檔案
+- `.cfignore`：手動部署到 Cloudflare Workers 時排除的檔案
 
 ## 更新資料
 

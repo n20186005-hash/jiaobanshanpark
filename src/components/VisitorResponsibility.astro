@@ -1,0 +1,30 @@
+---
+import Icon from '@/components/Icon.astro';
+import { visitorResponsibility } from '@/data/site';
+---
+
+<section id="responsibility" class="mountain-section section-pad bg-forest-950 text-white">
+  <div class="container-shell">
+    <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+      <div class="reveal">
+        <p class="eyebrow !text-plum-300">SCIENCE & RESPONSIBILITY</p>
+        <h2 class="section-title !text-cream-50">科普視角，與負責任的訪客</h2>
+      </div>
+      <p class="max-w-2xl text-base leading-8 text-cream-200/75 lg:justify-self-end lg:text-lg">
+        角板山不只是一處風景，也是泰雅族傳統領域、北橫山城與山林生態交會的地方。看懂它，也學著溫柔地對待它。
+      </p>
+    </div>
+
+    <div class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {visitorResponsibility.map((item) => (
+        <article class="reveal rounded-2xl border border-cream-100/14 bg-white/5 p-6">
+          <span class="grid size-11 place-items-center rounded-full bg-forest-100 text-forest-700">
+            <Icon name={item.icon} class="size-5" />
+          </span>
+          <h3 class="mt-4 text-lg font-bold text-cream-50">{item.title}</h3>
+          <p class="mt-2 text-sm leading-7 text-cream-200/74">{item.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

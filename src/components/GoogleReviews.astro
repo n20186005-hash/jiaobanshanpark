@@ -1,0 +1,118 @@
+---
+import Icon from '@/components/Icon.astro';
+import { entity, googleReview } from '@/data/site';
+
+const fillPercent = (googleReview.rating / googleReview.ratingScale) * 100;
+const reviewCount = googleReview.ratingCount.toLocaleString('en-US');
+const stars = Array.from({ length: googleReview.ratingScale });
+---
+
+<section id="reviews" class="section-pad bg-cream-100">
+  <div class="container-shell">
+    <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+      <div class="reveal">
+        <p class="eyebrow">GOOGLE MAPS REVIEWS</p>
+        <h2 class="section-title">旅客怎麼評價角板山公園</h2>
+      </div>
+      <p class="section-lead lg:justify-self-end">
+        {entity.fullName}（{entity.fullNameEn}）位於{entity.country}{entity.stateProvince}{entity.city}，以下整理 Google 地圖上的評分概況與常見評價重點。
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-8">
+      <article class="review-panel reveal flex flex-col gap-5 p-6 md:p-8">
+        <div class="flex items-center gap-3">
+          <span class="grid size-11 place-items-center rounded-full bg-white text-base font-bold text-[#1a73e8] shadow-sm">G</span>
+          <div>
+            <p class="text-xs font-bold tracking-[0.16em] text-plum-600">GOOGLE 地圖</p>
+            <p class="mt-0.5 text-sm text-stonewarm-500">{entity.category}・{entity.stateProvince}{entity.city}</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex flex-wrap items-end gap-3">
+            <p class="font-serif text-6xl font-bold leading-none text-forest-900 md:text-7xl">{googleReview.rating}</p>
+            <div>
+              <div
+                class="relative inline-flex"
+                role="img"
+                aria-label={`Google 地圖評分 ${googleReview.rating} 分，滿分 ${googleReview.ratingScale} 分`}
+              >
+                <div class="flex w-max gap-1 text-cream-300">
+                  {stars.map(() => (
+                    <svg class="size-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="m12 3 2.7 5.5 6 .9-4.35 4.24 1.03 6-5.38-2.83L6.62 19.64l1.03-6L3.3 9.4l6-.9L12 3Z"></path>
+                    </svg>
+                  ))}
+                </div>
+                <div class="absolute inset-y-0 left-0 overflow-hidden" style={`width:${fillPercent}%`} aria-hidden="true">
+                  <div class="flex w-max gap-1 text-amber-400">
+                    {stars.map(() => (
+                      <svg class="size-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="m12 3 2.7 5.5 6 .9-4.35 4.24 1.03 6-5.38-2.83L6.62 19.64l1.03-6L3.3 9.4l6-.9L12 3Z"></path>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p class="mt-2 text-sm text-stonewarm-500">{reviewCount} 則 Google 地圖評價</p>
+            </div>
+          </div>
+
+          <a
+            href={googleReview.sourceUrl}
+            target="_blank"
+            rel="nofollow noopener noreferrer"
+            class="mt-4 block text-xs leading-6 text-stonewarm-500 underline decoration-stonewarm-200 decoration-1 underline-offset-4 transition hover:text-plum-600"
+          >
+            {googleReview.summaryLine}
+          </a>
+        </div>
+
+        <dl class="grid gap-3 border-t border-stonewarm-200 pt-5 text-sm">
+          <div class="flex gap-3">
+            <dt class="mt-0.5 shrink-0"><Icon name="map-pin" class="size-4 text-plum-600" /></dt>
+            <dd class="leading-6 text-stonewarm-700">{entity.postalCode}{entity.country}{entity.stateProvince}{entity.city}{entity.streetAddress}</dd>
+          </div>
+          <div class="flex gap-3">
+            <dt class="mt-0.5 shrink-0"><Icon name="phone" class="size-4 text-plum-600" /></dt>
+            <dd class="leading-6 text-stonewarm-700">{entity.telephoneDisplay}</dd>
+          </div>
+          <div class="flex gap-3">
+            <dt class="mt-0.5 shrink-0"><Icon name="info" class="size-4 text-plum-600" /></dt>
+            <dd class="leading-6 text-stonewarm-700">Plus Code：{entity.plusCode}</dd>
+          </div>
+        </dl>
+      </article>
+
+      <div class="reveal">
+        <ul class="grid gap-4 sm:grid-cols-2">
+          {googleReview.highlights.map((item) => (
+            <li class="detail-card">
+              <p class="text-xs font-bold tracking-[0.14em] text-plum-600">REVIEW HIGHLIGHT</p>
+              <h3 class="mt-3 text-lg font-bold text-forest-900">{item.title}</h3>
+              <p class="mt-2 text-sm leading-7 text-stonewarm-700">{item.detail}</p>
+            </li>
+          ))}
+        </ul>
+
+        <p class="mt-5 flex items-start gap-2 text-xs leading-6 text-stonewarm-500">
+          <Icon name="info" class="mt-0.5 size-4 shrink-0" />
+          <span>
+            以上為本站依 Google 地圖公開評價歸納的重點，非逐則原文引用。{googleReview.sourceNote}
+          </span>
+        </p>
+
+        <a
+          href={googleReview.sourceUrl}
+          target="_blank"
+          rel="nofollow noopener noreferrer"
+          class="mt-5 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-forest-900 px-6 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-forest-800"
+        >
+          在 Google 地圖查看全部評價
+          <Icon name="external" class="size-4" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

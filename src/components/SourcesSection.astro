@@ -1,0 +1,53 @@
+---
+import Icon from '@/components/Icon.astro';
+import { sources } from '@/data/site';
+---
+
+<section id="sources" class="section-pad bg-forest-50">
+  <div class="container-shell">
+    <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+      <div class="reveal">
+        <p class="eyebrow">SOURCES & REFERENCES</p>
+        <h2 class="section-title">資料來源與更新說明</h2>
+      </div>
+      <p class="section-lead lg:justify-self-end">
+        本指南整理自官方網站、Google 地圖公開資訊與開放授權圖庫。景點開放、活動與交通措施可能調整，出發前請再回到來源查核一次。
+      </p>
+    </div>
+
+    <ol class="mt-12 grid gap-4 md:grid-cols-2">
+      {sources.map((source, index) => (
+        <li class="mountain-card detail-card reveal md:p-6">
+          <div class="flex items-center gap-3">
+            <span class="grid size-8 shrink-0 place-items-center rounded-full border border-forest-300 bg-cream-50 text-xs font-bold text-forest-800">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <div>
+              <p class="text-xs font-bold tracking-[0.14em] text-plum-600">{source.label}</p>
+              <h3 class="mt-1 text-base font-bold text-forest-900">{source.org}</h3>
+            </div>
+          </div>
+          <p class="mt-4 text-sm leading-7 text-stonewarm-700">{source.note}</p>
+          <a
+            href={source.url}
+            target="_blank"
+            rel="nofollow noopener noreferrer"
+            class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-forest-800 underline decoration-plum-300 decoration-2 underline-offset-4 transition hover:text-plum-600"
+          >
+            查看來源
+            <Icon name="external" class="size-4" />
+          </a>
+        </li>
+      ))}
+    </ol>
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-2">
+      <p class="rounded-2xl border border-forest-900/10 bg-cream-50 p-5 text-sm leading-7 text-stonewarm-700">
+        <span class="font-bold text-forest-900">圖片版權：</span>本網站所展示的所有圖片產權及版權均歸原攝影者所有，授權方式依各圖片原始來源標示。
+      </p>
+      <p class="rounded-2xl border border-forest-900/10 bg-cream-50 p-5 text-sm leading-7 text-stonewarm-700">
+        <span class="font-bold text-forest-900">非官方聲明：</span>本站為非官方旅遊資訊網站，與 Google、桃園市政府及任何官方單位皆無隸屬關係；Google 地圖與 Google Maps 為 Google LLC 之商標。
+      </p>
+    </div>
+  </div>
+</section>

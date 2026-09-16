@@ -1,0 +1,50 @@
+---
+import Icon from '@/components/Icon.astro';
+import { audienceRoutes } from '@/data/site';
+---
+
+<section id="audiences" class="section-pad bg-cream-100">
+  <div class="container-shell">
+    <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+      <div class="reveal">
+        <p class="eyebrow">ROUTES BY TRAVELER</p>
+        <h2 class="section-title">按出行組成，挑一條剛好的路</h2>
+      </div>
+      <p class="section-lead lg:justify-self-end">
+        同樣的角板山，親子、攝影與長輩想要的速度不同。下面三條路線依「誰同行、走多快」設計，建議先選組成，再看停留點。
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-3">
+      {audienceRoutes.map((route) => (
+        <article class="mountain-card rounded-[1.7rem] bg-white p-6 reveal md:p-7">
+          <div class="flex items-center justify-between gap-3">
+            <span class="grid size-12 place-items-center rounded-full bg-plum-100 text-plum-600">
+              <Icon name={route.icon} class="size-6" />
+            </span>
+            <span class="rounded-full bg-forest-100 px-3 py-1 text-xs font-bold text-forest-800">{route.duration}</span>
+          </div>
+          <h3 class="mt-5 text-xl font-bold text-forest-900">{route.audience}</h3>
+          <p class="mt-1 text-xs font-bold tracking-[0.12em] text-plum-600">{route.pace}</p>
+          <p class="mt-4 text-sm leading-7 text-stonewarm-700">{route.summary}</p>
+          <ol class="mt-5 space-y-2.5 border-t border-stonewarm-200 pt-5">
+            {route.stops.map((stop, stopIndex) => (
+              <li class="flex gap-3 text-sm text-stonewarm-700">
+                <span class="grid size-6 shrink-0 place-items-center rounded-full border border-forest-300 bg-cream-50 text-xs font-bold text-forest-800">{stopIndex + 1}</span>
+                <span class="pt-0.5">{stop}</span>
+              </li>
+            ))}
+          </ol>
+          <p class="mt-5 flex gap-2 rounded-2xl bg-plum-100/70 p-4 text-sm leading-7 text-stonewarm-700">
+            <Icon name="info" class="mt-0.5 size-4 shrink-0 text-plum-600" />
+            <span>{route.note}</span>
+          </p>
+        </article>
+      ))}
+    </div>
+
+    <p class="mt-8 text-sm leading-7 text-stonewarm-700">
+      <span class="font-bold text-forest-900">半日或全日怎麼選？</span>第一次來、只想要核心景點，保留 <span class="font-bold">半日（約 2 小時）</span> 就夠；想拍照、參加導覽或順遊復興區商圈，安排 <span class="font-bold">全日（約 3 小時以上）</span> 更從容。也可參考上方的通用路線規劃器。
+    </p>
+  </div>
+</section>
