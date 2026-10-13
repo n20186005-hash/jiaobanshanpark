@@ -1,0 +1,180 @@
+---
+import '@/styles/global.css';
+import Icon from '@/components/Icon.astro';
+import { entity, googleReview, sources, photoCredits } from '@/data/site';
+import { topicPages, topicLinks } from '@/data/topics';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  image?: string;
+  breadcrumb: { name: string; path: string }[];
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogTitle,
+  ogDescription,
+  image = 'https://JiaobanshanPark.com/images/jiaobanshan-park-og-1.jpg',
+  breadcrumb,
+} = Astro.props;
+
+const fullTitle = title.includes('角板山公園') ? title : `${title}｜角板山公園`;
+const socialTitle = ogTitle ?? fullTitle;
+const socialDescription = ogDescription ?? description;
+const homeBreadcrumb = { name: '首頁', path: '/' };
+---
+
+<!doctype html>
+<html lang="zh-Hant-TW" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#17372d" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="角板山公園" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <title>{fullTitle}</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:site_name" content="角板山公園" />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={socialDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="角板山梅園與大漢溪山谷風景" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:description" content={socialDescription} />
+    <meta name="twitter:image" content={image} />
+
+    <slot name="head" />
+
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-HXM22WWPKP', { anonymize_ip: true });
+    </script>
+
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
+        });
+      }
+    </script>
+  </head>
+  <body class="min-h-screen bg-cream-50 text-ink selection:bg-plum-200 selection:text-forest-950">
+    <a class="skip-link" href="#main-content">跳到主要內容</a>
+
+    <header class="glass-header fixed inset-x-0 top-0 z-50 border-b border-forest-950/8">
+      <div class="container-shell flex h-[var(--header-height)] items-center justify-between gap-5">
+        <a href="/" class="group flex items-center gap-3" aria-label="角板山公園首頁">
+          <img src="/favicon.svg" alt="" width="40" height="40" class="size-10 rounded-full transition-transform group-hover:-rotate-3" />
+          <span class="leading-tight">
+            <span class="block font-serif text-lg font-bold tracking-tight text-forest-900">角板山公園</span>
+            <span class="block text-[0.6rem] font-bold tracking-[0.22em] text-plum-600">JIAOBANSHAN PARK</span>
+          </span>
+        </a>
+
+        <nav class="hidden items-center gap-7 md:flex" aria-label="分站導覽">
+          <a class="nav-link" href="/parking/">停車場</a>
+          <a class="nav-link" href="/plum-blossom/">梅花季</a>
+          <a class="nav-link" href="/transportation/">交通</a>
+        </nav>
+
+        <a
+          href={entity.parkMapUrl}
+          target="_blank"
+          rel="nofollow noopener"
+          class="inline-flex h-11 items-center gap-2 rounded-full bg-forest-900 px-5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-forest-800"
+        >
+          <Icon name="map-pin" class="size-4" />
+          開始導航
+        </a>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <nav class="border-b border-forest-950/8 bg-cream-100/70" aria-label="麵包屑">
+        <div class="container-shell flex items-center gap-2 py-3 text-sm text-stonewarm-500">
+          <a href={homeBreadcrumb.path} class="font-semibold text-forest-800 hover:text-plum-600">{homeBreadcrumb.name}</a>
+          {breadcrumb.map((item) => (
+            <Fragment>
+              <Icon name="chevron-down" class="size-3.5 -rotate-90 text-stonewarm-300" />
+              <span class="font-semibold text-forest-800">{item.name}</span>
+            </Fragment>
+          ))}
+        </div>
+      </nav>
+
+      <slot />
+    </main>
+
+    <footer class="bg-[#10271f] pb-14 pt-14 text-cream-100">
+      <div class="container-shell">
+        <div class="grid gap-10 border-b border-white/10 pb-10 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <div class="flex items-center gap-3">
+              <img src="/favicon.svg" alt="" width="44" height="44" class="size-11 rounded-full" />
+              <div><p class="font-serif text-xl font-bold">角板山公園</p><p class="mt-1 text-[0.62rem] font-bold tracking-[0.2em] text-plum-300">JIAOBANSHAN PARK</p></div>
+            </div>
+            <p class="mt-5 max-w-lg text-sm leading-7 text-cream-200/65">一份專注於角板山行館園區的繁體中文旅遊指南，協助旅人快速規劃路線、交通與停留時間。</p>
+          </div>
+          <div class="flex flex-wrap gap-x-6 gap-y-3 text-sm text-cream-200/70">
+            <a href="/" class="hover:text-white">首頁</a>
+            <a href="/parking/" class="hover:text-white">停車場</a>
+            <a href="/plum-blossom/" class="hover:text-white">梅花季</a>
+            <a href="/transportation/" class="hover:text-white">交通</a>
+            <a href="/#sources" class="hover:text-white">資料來源</a>
+          </div>
+        </div>
+
+        <div class="grid gap-6 py-8 text-xs leading-6 text-cream-200/55 md:grid-cols-[1fr_auto] md:items-start">
+          <div>
+            <p>本網站為非官方旅遊資訊網站。</p>
+            <p class="mt-2">本網站所展示的所有圖片產權及版權均歸原攝影者所有，授權方式依各圖片原始來源標示。</p>
+            <p class="mt-2">{googleReview.sourceNote}</p>
+          </div>
+          <p class="md:text-right">© 2026 JiaobanshanPark.com</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const revealItems = document.querySelectorAll<HTMLElement>('.reveal');
+      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
+        revealItems.forEach((item) => observer.observe(item));
+      } else {
+        revealItems.forEach((item) => item.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>

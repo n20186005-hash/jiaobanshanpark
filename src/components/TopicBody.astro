@@ -1,0 +1,94 @@
+---
+import ResponsiveImage from '@/components/ResponsiveImage.astro';
+import Icon from '@/components/Icon.astro';
+import type { TopicPageData } from '@/data/topics';
+
+interface Props {
+  page: TopicPageData;
+}
+
+const { page } = Astro.props;
+const ogImage = `https://JiaobanshanPark.com/images/${page.heroImage.name}.jpg`;
+---
+
+<section class="relative overflow-hidden bg-forest-950 pt-[calc(var(--header-height)+2rem)] text-white md:pt-[calc(var(--header-height)+4rem)]">
+  <div class="absolute inset-0">
+    <ResponsiveImage
+      name={page.heroImage.name}
+      alt={page.heroImage.alt}
+      width={page.heroImage.width}
+      height={page.heroImage.height}
+      class="h-full w-full object-cover"
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      position="50% 52%"
+    />
+    <div class="hero-mask absolute inset-0"></div>
+  </div>
+  <div class="container-shell relative max-w-4xl py-16 md:py-24">
+    <p class="mb-5 flex items-center gap-3 text-xs font-bold tracking-[0.24em] text-cream-200/85">
+      <span class="h-px w-9 bg-plum-300"></span>
+      角板山公園・{page.heroImage.alt.includes('梅') ? '冬季賞梅' : '遊園指南'}
+    </p>
+    <h1 class="font-serif text-4xl font-bold leading-tight tracking-tight text-cream-50 md:text-6xl">{page.h1}</h1>
+    <p class="mt-6 max-w-2xl text-base leading-8 text-cream-100/90 md:text-xl md:leading-9">{page.intro}</p>
+  </div>
+</section>
+
+{
+  page.sections.map((section, index) => (
+    <section id={section.id} class={`section-pad ${index % 2 === 1 ? 'bg-forest-50' : 'bg-cream-50'}`}>
+      <div class="container-shell">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div class="reveal">
+            <p class="eyebrow">{section.eyebrow}</p>
+            <h2 class="section-title">{section.title}</h2>
+          </div>
+          <div class="reveal space-y-5">
+            {section.paragraphs.map((paragraph) => (
+              <p class="section-lead">{paragraph}</p>
+            ))}
+            {section.list && (
+              <ul class="grid gap-4 sm:grid-cols-2">
+                {section.list.map((item) => (
+                  <li class="detail-card">
+                    <h3 class="text-base font-bold text-forest-900">{item.title}</h3>
+                    <p class="mt-2 text-sm leading-7 text-stonewarm-700">{item.body}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {section.note && (
+              <p class="flex items-start gap-2 rounded-2xl bg-plum-100/70 p-4 text-sm leading-7 text-stonewarm-700">
+                <Icon name="info" class="mt-0.5 size-4 shrink-0 text-plum-600" />
+                <span>{section.note}</span>
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  ))
+}
+
+<section id="faq" class="section-pad bg-cream-100">
+  <div class="container-shell grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+    <div class="reveal lg:sticky lg:top-28 lg:self-start">
+      <p class="eyebrow">BEFORE YOU GO</p>
+      <h2 class="section-title">出發前，最常問的事</h2>
+      <p class="section-lead mt-6">把最常被問的細節先釐清，現場就不必一直查手機。</p>
+    </div>
+    <div class="reveal">
+      {page.faqs.map((faq, index) => (
+        <details class="faq-item group py-5" open={index === 0} id={`faq-${faq.id}`}>
+          <summary class="flex items-center justify-between gap-5 py-2 text-left">
+            <h3 class="text-base font-bold leading-7 text-forest-900 md:text-lg">{faq.question}</h3>
+            <span class="faq-icon grid size-8 shrink-0 place-items-center rounded-full border border-forest-900/15 text-forest-800"><Icon name="chevron-down" class="size-4" /></span>
+          </summary>
+          <p class="max-w-2xl pb-2 pr-10 pt-3 text-sm leading-7 text-stonewarm-700 md:text-base md:leading-8">{faq.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

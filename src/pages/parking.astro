@@ -1,0 +1,26 @@
+---
+import SubpageLayout from '@/layouts/SubpageLayout.astro';
+import TopicBody from '@/components/TopicBody.astro';
+import { topicPages } from '@/data/topics';
+import { buildAttractionSchema, buildBreadcrumbSchema, buildFaqPageSchema } from '@/lib/seo';
+
+const page = topicPages.parking;
+const canonical = `https://JiaobanshanPark.com${page.path}`;
+const breadcrumb = [{ name: '停車場', path: page.path }];
+
+const schemas = [
+  buildAttractionSchema(),
+  buildBreadcrumbSchema([{ name: '首頁', path: '/' }, ...breadcrumb]),
+  buildFaqPageSchema(page.faqs),
+];
+---
+
+<SubpageLayout title={page.title} description={page.description} canonical={canonical} breadcrumb={breadcrumb}>
+  <Fragment slot="head">
+    {schemas.map((schema) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+    ))}
+  </Fragment>
+
+  <TopicBody page={page} />
+</SubpageLayout>

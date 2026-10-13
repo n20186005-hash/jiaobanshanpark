@@ -56,6 +56,15 @@ async function handleWeather(request: Request, ctx: WorkerContext): Promise<Resp
 export default {
   async fetch(request: Request, env: Env, ctx: WorkerContext): Promise<Response> {
     const url = new URL(request.url);
+    const host = url.host.toLowerCase();
+
+    // 統一規範：http → https，www → 裸網域（與 canonical 一致）
+    if (url.protocol === 'http:') {
+      return Response.redirect(`https://${host}${url.pathname}${url.search}`, 308);
+    }
+    if (host.startsWith('www.')) {
+      return Response.redirect(`https://${host.slice(4)}${url.pathname}${url.search}`, 308);
+    }
 
     if (url.pathname === '/api/weather') {
       return handleWeather(request, ctx);

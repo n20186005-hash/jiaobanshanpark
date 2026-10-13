@@ -10,13 +10,16 @@ import SeasonalStrategy from '@/components/SeasonalStrategy.astro';
 import AudienceRoutes from '@/components/AudienceRoutes.astro';
 import VisitorResponsibility from '@/components/VisitorResponsibility.astro';
 import { attractions, routes, faqs, photoCredits, entity, googleReview } from '@/data/site';
+import { topicPages, topicLinks } from '@/data/topics';
 
-const title = '角板山公園攻略｜免費入園・梅花季・戰備隧道・交通門票（桃園市復興區）';
+const title = '角板山公園旅遊攻略｜門票、開放時間、停車場、梅花季';
 const description =
-  '桃園復興角板山公園（角板山行館）旅遊指南：常態免費入園，整理冬季梅花季、戰備隧道彩繪展、開放時間、公車交通與周邊停車資訊，並附即時天氣與三條遊園路線。';
-const ogTitle = '角板山公園 Jiaobanshan Park（桃園市復興區）- Travel Guide';
-const ogDescription = 'Official visitor guide to Jiaobanshan Park (角板山公園) in Fuxing District, Taoyuan City, Taiwan：行館、梅園、戰備隧道、思親亭、交通與停車指南。';
-const mapUrl = 'https://www.google.com/maps/dir/?api=1&destination=24.813974%2C121.3506816&destination_place_id=ChIJr2I-r9MWaDQRiHCNvgk5XjM';
+  '桃園角板山公園旅遊指南，整理角板山行館、梅園、戰備隧道與思親亭等景點，提供開放時間、門票、仁愛及上台地停車場、交通路線與賞梅資訊，輕鬆規劃復興區半日遊。';
+const ogTitle = '角板山公園 Jiaobanshan Park（桃園市復興區）旅遊指南';
+const ogDescription =
+  '角板山公園（Jiaobanshan Park）位於桃園市復興區的非官方旅遊指南：行館、梅園、戰備隧道、思親亭、交通與停車資訊。';
+const mapUrl = entity.parkMapUrl;
+const residenceMapUrl = entity.residenceMapUrl;
 
 const touristSchema = {
   '@context': 'https://schema.org',
@@ -185,9 +188,9 @@ const faqSchema = {
             <span class="h-px w-9 bg-plum-300"></span>
             桃園・復興・北橫山城
           </p>
-          <h1 class="hero-title max-w-[11ch] text-cream-50">
+          <h1 class="hero-title text-cream-50">
             <span class="small">JIAOBANSHAN PARK</span>
-            走進<br />角板山公園
+            角板山公園｜桃園復興<br />旅遊與遊園指南
           </h1>
           <p class="mt-8 max-w-2xl text-base leading-8 text-cream-100/90 md:text-xl md:leading-9">
             在梅香、松林與山谷之間，走過歷史行館、戰備隧道與思親亭。這裡不只是一座公園，而是一段適合慢慢閱讀的北橫旅程。
@@ -246,7 +249,7 @@ const faqSchema = {
       <div class="container-shell pt-5">
         <p class="flex items-start gap-2 text-sm leading-6 text-stonewarm-500">
           <Icon name="info" class="mt-0.5 size-4 shrink-0" />
-          山區可能因颱風、豪雨、施工或活動調整開放，出發前請再確認現場公告。
+          戶外園區一般日間皆可散步，行館、戰備隧道等室內展區有固定開放時段；山區可能因颱風、豪雨、施工或活動調整，出發前請再確認現場公告。資料最後核實：{entity.dataVerifiedLabel}。
         </p>
       </div>
     </section>
@@ -619,20 +622,27 @@ const faqSchema = {
             </ul>
           </article>
 
-          <article class="mountain-card rounded-[1.7rem] border border-forest-900/10 bg-cream-50 p-6 reveal md:col-span-2 md:p-7">
-            <div class="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-center">
-              <div>
-                <p class="text-xs font-bold tracking-[0.15em] text-plum-600">DESTINATION</p>
-                <h3 class="mt-2 font-serif text-2xl font-bold text-forest-900">角板山行館園區</h3>
-                <p class="mt-2 text-sm leading-7 text-stonewarm-700">{entity.postalCode}{entity.country}{entity.stateProvince}{entity.city}{entity.streetAddress}</p>
-                <p class="mt-1 text-sm text-stonewarm-500">行館園區常用導航地址：{entity.streetAddressAlt}</p>
-                <p class="mt-1 text-sm text-stonewarm-500">座標：{entity.latitude}, {entity.longitude}</p>
-              </div>
-              <a href={mapUrl} target="_blank" rel="nofollow noopener" class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-forest-900 px-6 text-sm font-bold text-white hover:bg-forest-800">
-                <Icon name="map-pin" class="size-4" />導航前往
+          <div class="grid gap-4 md:col-span-2 sm:grid-cols-2">
+            <article class="mountain-card rounded-[1.7rem] border border-forest-900/10 bg-cream-50 p-6 reveal md:p-7">
+              <p class="text-xs font-bold tracking-[0.15em] text-plum-600">公園本體入口</p>
+              <h3 class="mt-2 font-serif text-2xl font-bold text-forest-900">角板山公園</h3>
+              <p class="mt-2 text-sm leading-7 text-stonewarm-700">{entity.postalCode}{entity.country}{entity.stateProvince}{entity.city}{entity.streetAddress}</p>
+              <p class="mt-1 text-sm text-stonewarm-500">座標：{entity.latitude}, {entity.longitude}</p>
+              <a href={mapUrl} target="_blank" rel="nofollow noopener" class="mt-4 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-forest-900 px-6 text-sm font-bold text-white hover:bg-forest-800">
+                <Icon name="map-pin" class="size-4" />導航到公園
               </a>
-            </div>
-          </article>
+            </article>
+
+            <article class="mountain-card rounded-[1.7rem] border border-forest-900/10 bg-cream-50 p-6 reveal md:p-7">
+              <p class="text-xs font-bold tracking-[0.15em] text-plum-600">行館園區入口</p>
+              <h3 class="mt-2 font-serif text-2xl font-bold text-forest-900">角板山行館園區</h3>
+              <p class="mt-2 text-sm leading-7 text-stonewarm-700">{entity.postalCode}{entity.country}{entity.stateProvince}{entity.city}{entity.streetAddressAlt}</p>
+              <p class="mt-1 text-sm text-stonewarm-500">與公園本體入口位置不同，導航請先確認目的地。</p>
+              <a href={residenceMapUrl} target="_blank" rel="nofollow noopener" class="mt-4 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-forest-900 px-6 text-sm font-bold text-white hover:bg-forest-800">
+                <Icon name="map-pin" class="size-4" />導航到行館
+              </a>
+            </article>
+          </div>
         </div>
 
         <figure class="reveal overflow-hidden rounded-[2rem] border border-forest-900/10 bg-white shadow-[0_25px_80px_rgba(23,55,45,0.08)] lg:col-span-2">
@@ -654,6 +664,42 @@ const faqSchema = {
             </a>
           </figcaption>
         </figure>
+      </div>
+    </section>
+
+    <section class="section-pad bg-cream-50">
+      <div class="container-shell">
+        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+          <div class="reveal">
+            <p class="eyebrow">MORE GUIDES</p>
+            <h2 class="section-title">延伸攻略：停車、賞梅與交通</h2>
+          </div>
+          <p class="section-lead lg:justify-self-end">把最常搜尋的細節拆成獨立頁面，出發前先讀完，現場更從容。</p>
+        </div>
+        <div class="mt-12 grid gap-6 md:grid-cols-3">
+          {topicLinks.map((link) => {
+            const t = topicPages[link.slug];
+            return (
+              <a
+                href={t.path}
+                class="group block overflow-hidden rounded-[1.7rem] border border-forest-900/10 bg-white shadow-[0_18px_50px_rgba(23,55,45,0.07)] transition hover:-translate-y-1"
+              >
+                <div class="photo-card aspect-[16/10] rounded-none border-0">
+                  <ResponsiveImage name={link.image} alt={t.h1} width={960} height={600} class="h-full w-full object-cover" position="50% 52%" />
+                </div>
+                <div class="p-6">
+                  <span class="inline-flex items-center gap-2 text-xs font-bold tracking-[0.12em] text-plum-600">
+                    <Icon name={link.icon} class="size-4" />{t.h1}
+                  </span>
+                  <p class="mt-3 text-sm leading-7 text-stonewarm-700">{t.description}</p>
+                  <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-forest-800">
+                    閱讀攻略 <Icon name="arrow-right" class="size-4" />
+                  </span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
       </div>
     </section>
 
@@ -763,6 +809,9 @@ const faqSchema = {
           <a href="#reviews" class="hover:text-white">旅客評價</a>
           <a href="#sources" class="hover:text-white">資料來源</a>
           <a href="#faq" class="hover:text-white">常見問題</a>
+          <a href="/parking/" class="hover:text-white">停車場</a>
+          <a href="/plum-blossom/" class="hover:text-white">梅花季</a>
+          <a href="/transportation/" class="hover:text-white">交通</a>
         </div>
       </div>
 

@@ -2,7 +2,7 @@ const CACHE_VERSION = 'jiaobanshan-v1';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
-const PRECACHE_URLS = ['/', '/404', '/favicon.svg', '/site.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png'];
+const PRECACHE_URLS = ['/', '/parking/', '/plum-blossom/', '/transportation/', '/404', '/favicon.svg', '/site.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 const OFFLINE_HTML = `<!doctype html>
 <html lang="zh-Hant-TW">
