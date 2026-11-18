@@ -1,0 +1,31 @@
+---
+import SubpageLayout from '@/layouts/SubpageLayout.astro';
+import SourcesSection from '@/components/SourcesSection.astro';
+import { googleReview, entity } from '@/data/site';
+---
+
+<SubpageLayout
+  title="資料來源與更新說明"
+  description="角板山公園旅遊資訊的官方資料、Google 地圖、旅客評價與實景照片參考來源，包含更新日期與查核連結。"
+  canonical="https://JiaobanshanPark.com/sources/"
+  breadcrumb={[{ name: '資料來源', path: '/sources/' }]}
+>
+  <section class="bg-cream-100 py-16 md:py-20">
+    <div class="container-shell max-w-4xl">
+      <p class="eyebrow">EDITORIAL SOURCES</p>
+      <h1 class="section-title mt-3">資料來源與更新說明</h1>
+      <p class="section-lead mt-5">這裡集中列出本指南的參考資料、評價更新及圖片來源，方便旅客按需要回到原始資訊查核。</p>
+    </div>
+  </section>
+  <SourcesSection />
+  <section class="section-pad bg-cream-100">
+    <div class="container-shell max-w-4xl space-y-6 text-stonewarm-700">
+      <h2 class="font-serif text-3xl font-bold text-forest-900">Google 地圖旅客評價</h2>
+      <p class="leading-8">角板山公園目前於本站顯示為 <strong>{googleReview.rating} / 5</strong>，共 <strong>{googleReview.ratingCount.toLocaleString('en-US')}</strong> 則評價；資料更新日期：<strong>{googleReview.syncLabel}</strong>。評分與評價數可能隨時變動。</p>
+      <p class="leading-8">{googleReview.sourceNote} 本站僅整理評價整體趨勢，並不轉載單則使用者評論。</p>
+      <a class="inline-flex rounded-full bg-forest-900 px-6 py-3 font-bold text-white" href={entity.mapsShareUrl} target="_blank" rel="nofollow noopener noreferrer">查看 Google 地圖評價與位置 ↗</a>
+      <p class="leading-8">本站為獨立旅遊資訊網站，與 Google、桃園市政府或任何官方機構無隸屬關係；Google 地圖與 Google Maps 為 Google LLC 的商標。景點開放、活動與交通措施可能調整，出發前請以管理單位公告為準。</p>
+      <p><a class="font-bold text-forest-800 underline underline-offset-4" href="/image-credits/">前往實景照片來源與說明 →</a></p>
+    </div>
+  </section>
+</SubpageLayout>

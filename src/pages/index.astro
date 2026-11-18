@@ -3,13 +3,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import ResponsiveImage from '@/components/ResponsiveImage.astro';
 import Icon from '@/components/Icon.astro';
 import GoogleReviews from '@/components/GoogleReviews.astro';
-import SourcesSection from '@/components/SourcesSection.astro';
 import WeatherWidget from '@/components/WeatherWidget.astro';
 import VisitorServices from '@/components/VisitorServices.astro';
 import SeasonalStrategy from '@/components/SeasonalStrategy.astro';
 import AudienceRoutes from '@/components/AudienceRoutes.astro';
 import VisitorResponsibility from '@/components/VisitorResponsibility.astro';
-import { attractions, routes, faqs, photoCredits, entity, googleReview } from '@/data/site';
+import { attractions, routes, faqs, entity, googleReview } from '@/data/site';
 import { topicPages, topicLinks } from '@/data/topics';
 import { places } from '@/data/places';
 
@@ -781,8 +780,6 @@ const faqSchema = {
       </div>
     </section>
 
-    <SourcesSection />
-
     <VisitorResponsibility />
 
     <section class="mountain-section relative overflow-hidden bg-forest-950 py-20 text-white md:py-28">
@@ -819,7 +816,8 @@ const faqSchema = {
           <a href="#transport" class="hover:text-white">交通停車</a>
           <a href="#services" class="hover:text-white">訪客服務</a>
           <a href="#reviews" class="hover:text-white">旅客評價</a>
-          <a href="#sources" class="hover:text-white">資料來源</a>
+          <a href="/sources/" class="hover:text-white">資料來源</a>
+          <a href="/image-credits/" class="hover:text-white">圖片來源</a>
           <a href="#faq" class="hover:text-white">常見問題</a>
           <a href="/parking/" class="hover:text-white">停車場</a>
           <a href="/explore/" class="hover:text-white">周邊探索</a>
@@ -828,24 +826,9 @@ const faqSchema = {
         </div>
       </div>
 
-      <div class="grid gap-6 py-8 text-xs leading-6 text-cream-200/55 md:grid-cols-[1fr_auto] md:items-start">
-        <div>
-        <p>本網站為非官方旅遊資訊網站。</p>
-        <p class="mt-2">本網站所展示的所有圖片產權及版權均歸原攝影者所有，授權方式依各圖片原始來源標示。</p>
-        <p class="mt-2">{googleReview.sourceNote}</p>
-        <details class="mt-4 max-w-2xl">
-            <summary class="cursor-pointer font-bold text-cream-200/75 hover:text-white">實景照片來源與授權</summary>
-            <ul class="mt-3 space-y-2 border-l border-white/10 pl-4">
-              {photoCredits.map((credit) => (
-                <li>
-                  {credit.label}：{credit.author}，{credit.license}。
-                  <a href={credit.source} target="_blank" rel="license noopener" class="underline decoration-white/25 underline-offset-4 hover:text-white">來源</a>
-                </li>
-              ))}
-            </ul>
-          </details>
-        </div>
-        <p class="md:text-right">© 2026 JiaobanshanPark.com</p>
+      <div class="grid gap-2 py-8 text-xs leading-6 text-cream-200/55 md:grid-cols-[1fr_auto] md:items-start">
+        <p>本網站是一個獨立的旅遊資訊項目。我們與任何政府機構或官方組織均無關聯。</p>
+        <p class="md:text-right">© 2026 角板山公園 · 版權所有</p>
       </div>
     </div>
   </footer>

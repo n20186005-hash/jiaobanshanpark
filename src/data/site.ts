@@ -237,7 +237,7 @@ export const entity = {
   category: '公園',
   /** 開放時間、收費與交通措施的資料最後核實月份 */
   dataVerifiedLabel: '2026 年 10 月',
-  reviewSyncLabel: '2026 年 10 月',
+  reviewSyncLabel: '2026 年 11 月 18 日',
   mapsShareUrl: 'https://maps.app.goo.gl/E2YQjRpKqN1rAn9s9',
   mapsEmbedSrc:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3621.4589439776278!2d121.35068159999999!3d24.813973999999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346816d3af3e62af%3A0x335e093bbe8d7088!2z6KeS5p2_5bGx5YWs5Zut!5e0!3m2!1szh-CN!2stw!4v1785324111448!5m2!1szh-CN!2stw',
@@ -259,14 +259,14 @@ export const entity = {
  */
 export const googleReview = {
   rating: 4.3,
-  ratingCount: 13230,
+  ratingCount: 13280,
   ratingScale: 5,
-  syncLabel: '2026 年 10 月',
+  syncLabel: '2026 年 11 月 18 日',
   sourceUrl: entity.mapsShareUrl,
   /** 按下連結旁的來源小字 */
-  summaryLine: '評分與評價數同步自 Google 地圖（Google Maps）使用者評價 · 2026 年 10 月 · 點擊查看 Google 地圖全部評價 ↗',
+  summaryLine: '評分與評價數同步自 Google 地圖（Google Maps）使用者評價 · 更新日期 2026 年 11 月 18 日 · 點擊查看 Google 地圖全部評價 ↗',
   /** 評價區塊的完整版權聲明 */
-  sourceNote: '同步自 Google 地圖使用者評價，同步時間 2026 年 10 月；版權歸原作者與 Google 地圖所有',
+  sourceNote: '同步自 Google 地圖使用者評價，更新日期 2026 年 11 月 18 日；評價內容歸原作者與 Google 地圖所有。',
   /** 由本站依 Google 地圖公開評價歸納的重點，非逐則原文引用 */
   highlights: [
     {
