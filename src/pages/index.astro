@@ -117,6 +117,7 @@ const faqSchema = {
 
       <nav class="hidden items-center gap-7 lg:flex" aria-label="主要導覽">
         <a class="nav-link" href="#highlights">必看景點</a>
+        <a class="nav-link" href="/explore/">周邊探索</a>
         <a class="nav-link" href="#routes">遊園路線</a>
         <a class="nav-link" href="#seasons">四季風景</a>
         <a class="nav-link" href="#weather">天氣預報</a>
@@ -153,6 +154,7 @@ const faqSchema = {
     <nav id="mobile-menu" class="hidden border-t border-forest-950/8 bg-cream-50 px-4 py-4 lg:hidden" aria-label="行動版導覽">
       <div class="container-shell grid gap-1">
         <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#highlights">必看景點</a>
+        <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="/explore/">周邊探索</a>
         <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#routes">遊園路線</a>
         <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#seasons">四季風景</a>
         <a class="rounded-xl px-3 py-3 font-semibold text-forest-900 hover:bg-forest-50" href="#weather">天氣預報</a>
@@ -703,6 +705,22 @@ const faqSchema = {
       </div>
     </section>
 
+    <section class="section-pad bg-forest-50" id="explore">
+      <div class="container-shell">
+        <div class="flex flex-wrap items-end justify-between gap-5"><div><p class="eyebrow">EXPLORE MORE</p><h2 class="section-title">角板山景點與停車入口指南</h2></div><a href="/explore/" class="font-bold text-forest-800 underline">查看全部六篇專頁 →</a></div>
+        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            ['仁愛停車場', '/explore/renai-parking/', '北入口附近，適合先走行館與戰備隧道'],
+            ['上台地停車場', '/explore/shangtaidi-parking/', '南入口附近，適合先逛草地與雕塑園區'],
+            ['角板山行館', '/explore/jiaobanshan-residence/', '認識行館歷史與山林建築'],
+            ['戰備隧道', '/explore/war-tunnel/', '走進軍事設施與歷史展示'],
+            ['樟腦收納所', '/explore/camphor-storehouse/', '探訪日式木造產業建築'],
+            ['思親亭', '/explore/sichin-pavilion/', '眺望大漢溪與溪口台地'],
+          ].map(([name, path, desc]) => <a href={path} class="detail-card transition hover:-translate-y-1"><h3 class="text-lg font-bold text-forest-900">{name} →</h3><p class="mt-2 text-sm leading-7">{desc}</p></a>)}
+        </div>
+      </div>
+    </section>
+
     <VisitorServices />
 
     <section class="section-pad bg-cream-50">
@@ -810,6 +828,7 @@ const faqSchema = {
           <a href="#sources" class="hover:text-white">資料來源</a>
           <a href="#faq" class="hover:text-white">常見問題</a>
           <a href="/parking/" class="hover:text-white">停車場</a>
+          <a href="/explore/" class="hover:text-white">周邊探索</a>
           <a href="/plum-blossom/" class="hover:text-white">梅花季</a>
           <a href="/transportation/" class="hover:text-white">交通</a>
         </div>

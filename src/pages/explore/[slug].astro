@@ -1,0 +1,52 @@
+---
+import SubpageLayout from '@/layouts/SubpageLayout.astro';
+import ResponsiveImage from '@/components/ResponsiveImage.astro';
+import { places } from '@/data/places';
+
+export function getStaticPaths() {
+  return places.map((place) => ({ params: { slug: place.slug }, props: { place } }));
+}
+const { place } = Astro.props;
+const path = `/explore/${place.slug}/`;
+const canonical = `https://jiaobanshanpark.com${path}`;
+const title = `${place.name}｜位置、特色、交通與遊覽路線`;
+const description = `${place.name}旅遊指南：${place.lead}整理地址、開放資訊、費用、歷史特色、拍照建議與 Google 地圖導航。`;
+const breadcrumb = [{ name: '周邊探索', path: '/explore/' }, { name: place.name, path }];
+const schema = {
+  '@context': 'https://schema.org', '@type': 'TouristAttraction', name: place.name, description,
+  url: canonical, image: `https://jiaobanshanpark.com/images/${place.image}.jpg`,
+  isPartOf: { '@type': 'TouristAttraction', name: '角板山公園', url: 'https://jiaobanshanpark.com/' },
+  hasMap: place.map,
+};
+const breadcrumbSchema = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://jiaobanshanpark.com/' },
+  { '@type': 'ListItem', position: 2, name: '周邊探索', item: 'https://jiaobanshanpark.com/explore/' },
+  { '@type': 'ListItem', position: 3, name: place.name, item: canonical },
+] };
+---
+<SubpageLayout {title} {description} {canonical} {breadcrumb}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)}></script>
+  </Fragment>
+  <section class="relative overflow-hidden bg-forest-950 pt-[calc(var(--header-height)+3rem)] text-white">
+    <div class="absolute inset-0">{place.slug.includes('parking') ? <img src={`/images/${place.image}.jpg`} alt={place.photo} width="960" height="720" class="h-full w-full object-cover" fetchpriority="high" /> : <ResponsiveImage name={place.image} alt={place.photo} width={960} height={720} class="h-full w-full object-cover" sizes="100vw" loading="eager" />}<div class="hero-mask absolute inset-0"></div></div>
+    <div class="container-shell relative max-w-4xl py-20 md:py-28">
+      <p class="eyebrow text-plum-200">JIAOBANSHAN · {place.type}</p>
+      <h1 class="mt-4 font-serif text-4xl font-bold md:text-6xl">{place.name}</h1>
+      <p class="mt-6 max-w-2xl text-lg leading-9 text-cream-100">{place.lead}</p>
+      <a href={place.map} target="_blank" rel="nofollow noopener" class="mt-8 inline-flex rounded-full bg-white px-6 py-3 font-bold text-forest-900 hover:bg-cream-100">在 Google 地圖查看專屬位置 ↗</a>
+    </div>
+  </section>
+  <section class="section-pad bg-cream-50"><div class="container-shell grid gap-10 lg:grid-cols-[.85fr_1.15fr]">
+    <div><p class="eyebrow">PLAN YOUR VISIT</p><h2 class="section-title">基本資料與出發前資訊</h2><p class="section-lead mt-5">{place.lead}</p></div>
+    <dl class="grid gap-4 sm:grid-cols-2">
+      {([['所在地',place.address],['建議停留',place.duration],['開放資訊',place.hours],['門票或停車費',place.fee]] as const).map(([label,value]) => <div class="detail-card"><dt class="text-sm font-bold text-plum-700">{label}</dt><dd class="mt-2 leading-7 text-forest-900">{value}</dd></div>)}
+    </dl>
+  </div></section>
+  <section class="section-pad bg-forest-50"><div class="container-shell grid gap-10 lg:grid-cols-[.85fr_1.15fr]"><div><p class="eyebrow">HISTORY & CULTURE</p><h2 class="section-title">歷史與地方脈絡</h2></div><p class="section-lead">{place.history}</p></div></section>
+  <section class="section-pad bg-cream-50"><div class="container-shell grid gap-10 lg:grid-cols-[.85fr_1.15fr]"><div><p class="eyebrow">WHAT TO SEE</p><h2 class="section-title">景觀、建築與拍照重點</h2></div><div><p class="section-lead">{place.feature}</p><p class="mt-5 text-sm text-stonewarm-600">圖片說明：{place.photo}。</p>{place.slug === 'shangtaidi-parking' && <p class="mt-2 text-sm"><a class="underline" href="https://swh6487sws6487.pixnet.net/blog/posts/9576105916" target="_blank" rel="noopener">停車區照片來源</a></p>}{place.slug === 'renai-parking' && <p class="mt-2 text-sm"><a class="underline" href="https://paicj.pixnet.net/blog/posts/11403711169" target="_blank" rel="noopener">停車入口照片來源</a></p>}</div></div></section>
+  <section class="section-pad bg-forest-50"><div class="container-shell grid gap-10 lg:grid-cols-[.85fr_1.15fr]"><div><p class="eyebrow">WALKING ROUTE</p><h2 class="section-title">建議步行順序</h2><p class="section-lead mt-5">先確認山區天候與園區維護情況，再依步道指標調整。</p></div><ol class="space-y-4">{place.route.map((step,index) => <li class="detail-card flex gap-4"><span class="font-serif text-2xl font-bold text-plum-600">{String(index+1).padStart(2,'0')}</span><span class="leading-8">{step}</span></li>)}</ol></div></section>
+  <section class="section-pad bg-cream-50"><div class="container-shell grid gap-10 lg:grid-cols-[.85fr_1.15fr]"><div><p class="eyebrow">VISITOR GUIDE</p><h2 class="section-title">交通、須知與常見問題</h2></div><div class="space-y-5"><h3 class="text-lg font-bold">如何抵達？</h3><p class="section-lead">自駕可由大溪循台7線往復興區，依專屬地圖連結及現場指標找入口；搭車可先抵角板山公園周邊站點，再依園區步道行走。公車班次與末班車請當日查詢。</p><h3 class="text-lg font-bold">需要預約或買票嗎？</h3><p class="section-lead">{place.fee}。室內展區、停車場與季節活動規則可能不同，出發前以管理單位及現場告示為準。</p><h3 class="text-lg font-bold">適合親子與長者嗎？</h3><p class="section-lead">主要遊園動線可彈性縮短，但坡道、階梯、雨後濕滑與展區進出限制各不相同；可先選入口附近的平緩路段，避免勉強完成全部行程。</p><p class="text-sm leading-7 text-stonewarm-600">參考：<a class="underline" href="https://travel.tycg.gov.tw/zh-tw/travel/tour/48" target="_blank" rel="noopener">桃園觀光導覽網歷史生態之旅</a>、<a class="underline" href="https://travel.tycg.gov.tw/zh-tw/event/calendardetail/4794" target="_blank" rel="noopener">官方角板山梅花季交通資料</a>。資料屬行前規劃用途，動態資訊請現場核實。</p></div></div></section>
+  <section class="section-pad bg-cream-100"><div class="container-shell"><p class="eyebrow">KEEP EXPLORING</p><h2 class="section-title">接著探索角板山</h2><div class="mt-8 grid gap-4 md:grid-cols-3">{places.filter(p => p.slug !== place.slug).slice(0,3).map(p => <a class="detail-card transition hover:-translate-y-1" href={`/explore/${p.slug}/`}><span class="text-xs font-bold text-plum-700">{p.type}</span><h3 class="mt-2 text-xl font-bold text-forest-900">{p.name} →</h3><p class="mt-2 text-sm leading-7">{p.lead}</p></a>)}</div><a class="mt-8 inline-block font-bold text-forest-800 underline" href="/explore/">查看全部景點與停車資訊</a></div></section>
+</SubpageLayout>
