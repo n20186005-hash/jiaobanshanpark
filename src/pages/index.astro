@@ -11,6 +11,7 @@ import AudienceRoutes from '@/components/AudienceRoutes.astro';
 import VisitorResponsibility from '@/components/VisitorResponsibility.astro';
 import { attractions, routes, faqs, photoCredits, entity, googleReview } from '@/data/site';
 import { topicPages, topicLinks } from '@/data/topics';
+import { places } from '@/data/places';
 
 const title = '角板山公園旅遊攻略｜門票、開放時間、停車場、梅花季';
 const description =
@@ -707,16 +708,9 @@ const faqSchema = {
 
     <section class="section-pad bg-forest-50" id="explore">
       <div class="container-shell">
-        <div class="flex flex-wrap items-end justify-between gap-5"><div><p class="eyebrow">EXPLORE MORE</p><h2 class="section-title">角板山景點與停車入口指南</h2></div><a href="/explore/" class="font-bold text-forest-800 underline">查看全部六篇專頁 →</a></div>
+        <div class="flex flex-wrap items-end justify-between gap-5"><div><p class="eyebrow">EXPLORE MORE</p><h2 class="section-title">角板山景點與停車入口指南</h2></div><a href="/explore/" class="font-bold text-forest-800 underline">查看全部十一篇專頁 →</a></div>
         <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            ['仁愛停車場', '/explore/renai-parking/', '北入口附近，適合先走行館與戰備隧道'],
-            ['上台地停車場', '/explore/shangtaidi-parking/', '南入口附近，適合先逛草地與雕塑園區'],
-            ['角板山行館', '/explore/jiaobanshan-residence/', '認識行館歷史與山林建築'],
-            ['戰備隧道', '/explore/war-tunnel/', '走進軍事設施與歷史展示'],
-            ['樟腦收納所', '/explore/camphor-storehouse/', '探訪日式木造產業建築'],
-            ['思親亭', '/explore/sichin-pavilion/', '眺望大漢溪與溪口台地'],
-          ].map(([name, path, desc]) => <a href={path} class="detail-card transition hover:-translate-y-1"><h3 class="text-lg font-bold text-forest-900">{name} →</h3><p class="mt-2 text-sm leading-7">{desc}</p></a>)}
+          {places.map(place => <a href={`/explore/${place.slug}/`} class="detail-card transition hover:-translate-y-1"><span class="text-xs font-bold text-plum-700">{place.type}</span><h3 class="mt-2 text-lg font-bold text-forest-900">{place.name} →</h3><p class="mt-2 text-sm leading-7">{place.lead}</p></a>)}
         </div>
       </div>
     </section>
